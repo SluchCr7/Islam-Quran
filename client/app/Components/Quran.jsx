@@ -31,21 +31,24 @@ export default function QuranPlayer() {
     () => reciters.find(r => String(r.id) === selectedReciterId) || null,
     [reciters, selectedReciterId]
   )
-
   // 🟢 جلب الشيوخ
   useEffect(() => {
     const fetchReciters = async () => {
       try {
-        const { data } = await axios.get(`${process.env.NEXT_PUBLIC_BACK_URL}/api/quran/reciters`)
-        const list = data?.recitations || []
-        setReciters(list)
-        if (list.length) setSelectedReciterId(String(list[0].id))
+        const { data } = await axios.get(`${process.env.NEXT_PUBLIC_BACK_URL}/api/quran/reciters`);
+        console.log("📡 Reciters response:", data); // Debug
+
+        const list = data?.recitations || [];
+        setReciters(list);
+
+        if (list.length) setSelectedReciterId(String(list[0].id));
       } catch (err) {
-        console.error("❌ خطأ في جلب الشيوخ:", err)
+        console.error("❌ خطأ في جلب الشيوخ:", err);
       }
-    }
-    fetchReciters()
-  }, [])
+    };
+    fetchReciters();
+  }, []);
+
 
   // 🟢 جلب السور
   useEffect(() => {
