@@ -12,69 +12,89 @@ export default function MushafPage() {
   const [surahs, setSurahs] = useState([])
   const [menuOpen, setMenuOpen] = useState(false)
   const [jumpPage, setJumpPage] = useState("")
-  const [theme, setTheme] = useState("dark") // وضع مبدئي
+  const [theme, setTheme] = useState("dark") // الوضع الافتراضي
+  const [bookmark, setBookmark] = useState(null)
 
   const edition = "quran-uthmani"
-    const [bookmark, setBookmark] = useState(null);
 
-    useEffect(() => {
-    const saved = JSON.parse(localStorage.getItem("bookmark"));
-    if (saved) setBookmark(saved);
-    }, []);
-    const handleBookmark = (ayah) => {
+  // تحميل bookmark من localStorage بعد أن يتأكد أن الكود بالمتصفح
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("bookmark")
+      if (saved) setBookmark(JSON.parse(saved))
+    }
+  }, [])
+
+  const handleBookmark = (ayah) => {
     const newBookmark = {
-        surah: ayah.surah.name,
-        surahNumber: ayah.surah.number,
-        ayah: ayah.numberInSurah,
-    };
-    setBookmark(newBookmark);
-    localStorage.setItem("bookmark", JSON.stringify(newBookmark));
-    };
+      surah: ayah.surah.name,
+      surahNumber: ayah.surah.number,
+      ayah: ayah.numberInSurah,
+    }
+    setBookmark(newBookmark)
+    if (typeof window !== "undefined") {
+      localStorage.setItem("bookmark", JSON.stringify(newBookmark))
+    }
+  }
 
   // تحميل الصفحة الأخيرة + الثيم
   useEffect(() => {
-    const last = localStorage.getItem("lastPage")
-    if (last) setPage(Number(last))
+    if (typeof window !== "undefined") {
+      const last = localStorage.getItem("lastPage")
+      if (last) setPage(Number(last))
 
-    const savedTheme = localStorage.getItem("theme") || "dark"
-    setTheme(savedTheme)
-    document.documentElement.classList.toggle("dark", savedTheme === "dark")
+      const savedTheme = localStorage.getItem("theme") || "dark"
+      setTheme(savedTheme)
+      document.documentElement.classList.toggle("dark", savedTheme === "dark")
+    }
   }, [])
 
   // جلب الصفحة
   useEffect(() => {
     fetch(`https://api.alquran.cloud/v1/page/${page}/${edition}`)
-      .then(res => res.json())
-      .then(data => setAyahs(data.data.ayahs))
-      .catch(err => console.error(err))
+      .then((res) => res.json())
+      .then((data) => setAyahs(data.data.ayahs))
+      .catch((err) => console.error(err))
 
-    localStorage.setItem("lastPage", page)
+    if (typeof window !== "undefined") {
+      localStorage.setItem("lastPage", page)
+    }
   }, [page])
 
   // جلب السور
   useEffect(() => {
     fetch(`https://api.alquran.cloud/v1/surah`)
-      .then(res => res.json())
-      .then(data => setSurahs(data.data))
-      .catch(err => console.error(err))
+      .then((res) => res.json())
+      .then((data) => setSurahs(data.data))
+      .catch((err) => console.error(err))
   }, [])
 
   const toggleTheme = () => {
     const newTheme = theme === "dark" ? "light" : "dark"
     setTheme(newTheme)
-    localStorage.setItem("theme", newTheme)
+    if (typeof window !== "undefined") {
+      localStorage.setItem("theme", newTheme)
+    }
     document.documentElement.classList.toggle("dark", newTheme === "dark")
   }
 
-  const prev = () => { if (page > 1) setPage(page - 1) }
-  const next = () => { if (page < totalPages) setPage(page + 1) }
+  const prev = () => {
+    if (page > 1) setPage(page - 1)
+  }
+  const next = () => {
+    if (page < totalPages) setPage(page + 1)
+  }
 
   return (
-    <div dir="rtl" className={`min-h-screen flex flex-col font-arabic transition-colors duration-500
-      ${theme === "dark"
-        ? "bg-gradient-to-br from-gray-950 via-gray-900 to-black text-gray-200"
-        : "bg-gradient-to-br from-gray-100 via-white to-gray-200 text-gray-900"}`}>
-
+    <div
+      dir="rtl"
+      className={`min-h-screen flex flex-col font-arabic transition-colors duration-500
+      ${
+        theme === "dark"
+          ? "bg-gradient-to-br from-gray-950 via-gray-900 to-black text-gray-200"
+          : "bg-gradient-to-br from-gray-100 via-white to-gray-200 text-gray-900"
+      }`}
+    >
       {/* هيدر */}
       <div className={`flex justify-between items-center p-4 shadow-lg border-b transition-colors duration-500
         ${theme === "dark"
