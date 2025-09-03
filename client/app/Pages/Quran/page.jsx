@@ -12,12 +12,12 @@ export default function MushafPage() {
   const [surahs, setSurahs] = useState([])
   const [menuOpen, setMenuOpen] = useState(false)
   const [jumpPage, setJumpPage] = useState("")
-  const [theme, setTheme] = useState("dark") // الوضع الافتراضي
+  const [theme, setTheme] = useState("dark") // افتراضي
   const [bookmark, setBookmark] = useState(null)
 
   const edition = "quran-uthmani"
 
-  // تحميل bookmark من localStorage بعد أن يتأكد أن الكود بالمتصفح
+  // تحميل bookmark
   useEffect(() => {
     if (typeof window !== "undefined") {
       const saved = localStorage.getItem("bookmark")
