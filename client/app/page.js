@@ -128,14 +128,7 @@ const books = [
             className="flex flex-col lg:flex-row gap-6"
           >
             {/* Hadith */}
-            <div className="lg:flex-1 backdrop-blur-lg bg-slate-900/60 p-6 rounded-2xl shadow-xl min-h-[300px] flex flex-col">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-bold text-white">حديث اليوم</h2>
-                <div className="flex space-x-2">
-                  <button className="px-3 py-1 bg-amber-500 rounded-full text-sm text-black">AR</button>
-                  <button className="px-3 py-1 bg-blue-500 rounded-full text-sm text-white">EN</button>
-                </div>
-              </div>
+            <div className="lg:flex-1 backdrop-blur-lg bg-slate-900/60 p-2 rounded-2xl shadow-xl min-h-[300px] flex flex-col">
               <Hadith />
             </div>
 
