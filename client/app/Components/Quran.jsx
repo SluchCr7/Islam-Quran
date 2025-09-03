@@ -36,7 +36,7 @@ export default function QuranPlayer() {
   useEffect(() => {
     const fetchReciters = async () => {
       try {
-        const { data } = await axios.get("http://localhost:3001/api/quran/reciters")
+        const { data } = await axios.get(`${process.env.NEXT_PUBLIC_BACK_URL}/api/quran/reciters`)
         const list = data?.recitations || []
         setReciters(list)
         if (list.length) setSelectedReciterId(String(list[0].id))
@@ -51,7 +51,7 @@ export default function QuranPlayer() {
   useEffect(() => {
     const fetchSurahs = async () => {
       try {
-        const { data } = await axios.get("http://localhost:3001/api/quran/surahs")
+        const { data } = await axios.get(`${process.env.NEXT_PUBLIC_BACK_URL}/api/quran/surahs`)
         setSurahs(data || [])
         if (data?.length) setSurahId(Number(data[0].id))
       } catch (err) {

@@ -6,7 +6,7 @@ const names = AsmaulHusnaNames
 
 export default function AsmaulHusnaMarquee() {
   return (
-    <div className="relative w-full overflow-hidden border-t border-[#30363d]/60 bg-gradient-to-r from-[#0d1117] via-[#161b22] to-[#0d1117] py-6">
+    <div className="relative w-full overflow-hidden border-t border-[#30363d]/60 bg-gradient-to-r from-[#0d1117] via-[#161b22] to-[#0d1117] py-2">
       {/* خلفية زخرفية شفافة */}
       <div className="absolute inset-0 bg-[url('/islambg.jpg')] opacity-5 pointer-events-none" />
 
@@ -22,7 +22,7 @@ export default function AsmaulHusnaMarquee() {
             key={i}
             whileHover={{ scale: 1.15 }}
             className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 via-yellow-400 to-amber-500
-                       text-xl font-extrabold drop-shadow-[0_0_12px_rgba(255,215,0,0.6)] tracking-wide px-6 transition-all"
+                       text-sm font-extrabold drop-shadow-[0_0_12px_rgba(255,215,0,0.6)] tracking-wide px-6 transition-all"
           >
             {name}
             <span className="mx-4 text-yellow-400 opacity-60">✦</span>
