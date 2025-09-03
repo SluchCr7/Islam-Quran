@@ -5,6 +5,9 @@ import { ArrowLeft, ArrowRight, BookOpen, Sun, Moon } from "lucide-react"
 import { CiMenuBurger } from "react-icons/ci"
 import SideMenu from "@/app/Components/MenuQuran"
 
+// ✅ تعطيل SSR نهائياً لهذه الصفحة
+export const ssr = false
+
 export default function MushafPage() {
   const totalPages = 604
   const [page, setPage] = useState(1)
@@ -12,17 +15,37 @@ export default function MushafPage() {
   const [surahs, setSurahs] = useState([])
   const [menuOpen, setMenuOpen] = useState(false)
   const [jumpPage, setJumpPage] = useState("")
-  const [theme, setTheme] = useState("dark") // افتراضي
+  const [theme, setTheme] = useState("dark")
   const [bookmark, setBookmark] = useState(null)
 
   const edition = "quran-uthmani"
 
-  // تحميل bookmark
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("bookmark")
-      if (saved) setBookmark(JSON.parse(saved))
-    }
+    const saved = JSON.parse(localStorage.getItem("bookmark"))
+    if (saved) setBookmark(saved)
+
+    const last = localStorage.getItem("lastPage")
+    if (last) setPage(Number(last))
+
+    const savedTheme = localStorage.getItem("theme") || "dark"
+    setTheme(savedTheme)
+    document.documentElement.classList.toggle("dark", savedTheme === "dark")
+  }, [])
+
+  useEffect(() => {
+    fetch(`https://api.alquran.cloud/v1/page/${page}/${edition}`)
+      .then(res => res.json())
+      .then(data => setAyahs(data.data.ayahs))
+      .catch(err => console.error(err))
+
+    localStorage.setItem("lastPage", page)
+  }, [page])
+
+  useEffect(() => {
+    fetch(`https://api.alquran.cloud/v1/surah`)
+      .then(res => res.json())
+      .then(data => setSurahs(data.data))
+      .catch(err => console.error(err))
   }, [])
 
   const handleBookmark = (ayah) => {
@@ -32,69 +55,25 @@ export default function MushafPage() {
       ayah: ayah.numberInSurah,
     }
     setBookmark(newBookmark)
-    if (typeof window !== "undefined") {
-      localStorage.setItem("bookmark", JSON.stringify(newBookmark))
-    }
+    localStorage.setItem("bookmark", JSON.stringify(newBookmark))
   }
-
-  // تحميل الصفحة الأخيرة + الثيم
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const last = localStorage.getItem("lastPage")
-      if (last) setPage(Number(last))
-
-      const savedTheme = localStorage.getItem("theme") || "dark"
-      setTheme(savedTheme)
-      document.documentElement.classList.toggle("dark", savedTheme === "dark")
-    }
-  }, [])
-
-  // جلب الصفحة
-  useEffect(() => {
-    fetch(`https://api.alquran.cloud/v1/page/${page}/${edition}`)
-      .then((res) => res.json())
-      .then((data) => setAyahs(data.data.ayahs))
-      .catch((err) => console.error(err))
-
-    if (typeof window !== "undefined") {
-      localStorage.setItem("lastPage", page)
-    }
-  }, [page])
-
-  // جلب السور
-  useEffect(() => {
-    fetch(`https://api.alquran.cloud/v1/surah`)
-      .then((res) => res.json())
-      .then((data) => setSurahs(data.data))
-      .catch((err) => console.error(err))
-  }, [])
 
   const toggleTheme = () => {
     const newTheme = theme === "dark" ? "light" : "dark"
     setTheme(newTheme)
-    if (typeof window !== "undefined") {
-      localStorage.setItem("theme", newTheme)
-    }
+    localStorage.setItem("theme", newTheme)
     document.documentElement.classList.toggle("dark", newTheme === "dark")
   }
 
-  const prev = () => {
-    if (page > 1) setPage(page - 1)
-  }
-  const next = () => {
-    if (page < totalPages) setPage(page + 1)
-  }
+  const prev = () => { if (page > 1) setPage(page - 1) }
+  const next = () => { if (page < totalPages) setPage(page + 1) }
 
   return (
-    <div
-      dir="rtl"
-      className={`min-h-screen flex flex-col font-arabic transition-colors duration-500
-      ${
-        theme === "dark"
-          ? "bg-gradient-to-br from-gray-950 via-gray-900 to-black text-gray-200"
-          : "bg-gradient-to-br from-gray-100 via-white to-gray-200 text-gray-900"
-      }`}
-    >
+    <div dir="rtl" className={`min-h-screen flex flex-col font-arabic transition-colors duration-500
+      ${theme === "dark"
+        ? "bg-gradient-to-br from-gray-950 via-gray-900 to-black text-gray-200"
+        : "bg-gradient-to-br from-gray-100 via-white to-gray-200 text-gray-900"}`}>
+      
       {/* هيدر */}
       <div className={`flex justify-between items-center p-4 shadow-lg border-b transition-colors duration-500
         ${theme === "dark"
