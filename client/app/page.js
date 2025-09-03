@@ -61,12 +61,31 @@ export default function IslamicDashboard() {
     return { next: upcoming, prev: previous ?? todayList[todayList.length - 1] }
   }, [todayList])
 
-const books = [
-  { name: "صحيح البخاري", slug: "bukhary", color: "from-yellow-500 to-amber-600",  badge: "حديث" },
-  { name: "صحيح مسلم", slug: "muslim", color: "from-blue-500 to-indigo-600",  badge: "حديث" },
-  { name: "سنن الترمذي", slug: "tirmidhi", color: "from-green-500 to-emerald-600",  badge: "حديث" },
-  { name: "حصن المسلم", slug: "hisn", color: "from-purple-500 to-pink-600",  badge: "أذكار" },
-];
+  const books = [
+    { name: "صحيح البخاري", slug: "bukhary", color: "from-yellow-500 to-amber-600",  badge: "حديث" },
+    { name: "صحيح مسلم", slug: "muslim", color: "from-blue-500 to-indigo-600",  badge: "حديث" },
+    { name: "سنن الترمذي", slug: "tirmidhi", color: "from-green-500 to-emerald-600",  badge: "حديث" },
+    { name: "حصن المسلم", slug: "hisn", color: "from-purple-500 to-pink-600",  badge: "أذكار" },
+  ];
+
+  if (!info || !info.date) {
+      return (
+        <div dir="rtl" className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-[#0d1117] via-[#161b22] to-[#0d1117] text-white">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6 }}
+            className="text-center space-y-6"
+          >
+            <h1 className="text-3xl font-bold text-yellow-400">مرحباً بك 👋</h1>
+            <p className="text-lg text-gray-300">
+              جاري تحميل بيانات اليوم الهجري والمواقيت...
+            </p>
+            <div className="animate-spin rounded-full h-12 w-12 border-4 border-yellow-400 border-t-transparent mx-auto"></div>
+          </motion.div>
+        </div>
+      )
+    }
 
   return (
     <div dir="rtl" className="relative min-h-screen bg-gradient-to-br from-[#0d1117] via-[#161b22] to-[#0d1117] text-[#e6edf3] font-sans overflow-x-hidden">
