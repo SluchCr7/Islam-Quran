@@ -1,7 +1,6 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
-const quranRoutes = require("./routes/quranRoutes");
 const connectDB = require("./config/db");
 dotenv.config();
 const app = express();
@@ -19,7 +18,7 @@ app.use(express.json());
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 })
-app.use("/api/quran", require("./routes/quranRoutes"));
+app.use("/api/quran", require("./Routes/quranRoutes"));
 app.use("/api/hadiths", require("./Routes/hadithRoutes"));
 
 // Run Server
