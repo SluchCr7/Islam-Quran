@@ -1,14 +1,12 @@
 "use client"
 import React, { useEffect, useState } from "react"
+import dynamic from "next/dynamic"
 import { motion } from "framer-motion"
 import { ArrowLeft, ArrowRight, BookOpen, Sun, Moon } from "lucide-react"
 import { CiMenuBurger } from "react-icons/ci"
 import SideMenu from "@/app/Components/MenuQuran"
 
-// ✅ تعطيل SSR نهائياً لهذه الصفحة
-export const ssr = false
-
-export default function MushafPage() {
+function Mushaf() {
   const totalPages = 604
   const [page, setPage] = useState(1)
   const [ayahs, setAyahs] = useState([])
@@ -20,16 +18,19 @@ export default function MushafPage() {
 
   const edition = "quran-uthmani"
 
+  // ✅ تحميل البيانات من localStorage بأمان
   useEffect(() => {
-    const saved = JSON.parse(localStorage.getItem("bookmark"))
-    if (saved) setBookmark(saved)
+    if (typeof window !== "undefined") {
+      const saved = JSON.parse(localStorage.getItem("bookmark"))
+      if (saved) setBookmark(saved)
 
-    const last = localStorage.getItem("lastPage")
-    if (last) setPage(Number(last))
+      const last = localStorage.getItem("lastPage")
+      if (last) setPage(Number(last))
 
-    const savedTheme = localStorage.getItem("theme") || "dark"
-    setTheme(savedTheme)
-    document.documentElement.classList.toggle("dark", savedTheme === "dark")
+      const savedTheme = localStorage.getItem("theme") || "dark"
+      setTheme(savedTheme)
+      document.documentElement.classList.toggle("dark", savedTheme === "dark")
+    }
   }, [])
 
   useEffect(() => {
@@ -38,7 +39,9 @@ export default function MushafPage() {
       .then(data => setAyahs(data.data.ayahs))
       .catch(err => console.error(err))
 
-    localStorage.setItem("lastPage", page)
+    if (typeof window !== "undefined") {
+      localStorage.setItem("lastPage", page)
+    }
   }, [page])
 
   useEffect(() => {
@@ -55,13 +58,17 @@ export default function MushafPage() {
       ayah: ayah.numberInSurah,
     }
     setBookmark(newBookmark)
-    localStorage.setItem("bookmark", JSON.stringify(newBookmark))
+    if (typeof window !== "undefined") {
+      localStorage.setItem("bookmark", JSON.stringify(newBookmark))
+    }
   }
 
   const toggleTheme = () => {
     const newTheme = theme === "dark" ? "light" : "dark"
     setTheme(newTheme)
-    localStorage.setItem("theme", newTheme)
+    if (typeof window !== "undefined") {
+      localStorage.setItem("theme", newTheme)
+    }
     document.documentElement.classList.toggle("dark", newTheme === "dark")
   }
 
@@ -69,17 +76,18 @@ export default function MushafPage() {
   const next = () => { if (page < totalPages) setPage(page + 1) }
 
   return (
-    <div dir="rtl" className={`min-h-screen flex flex-col font-arabic transition-colors duration-500
+    <div dir="rtl"
+      className={`min-h-screen flex flex-col font-arabic transition-colors duration-500
       ${theme === "dark"
         ? "bg-gradient-to-br from-gray-950 via-gray-900 to-black text-gray-200"
         : "bg-gradient-to-br from-gray-100 via-white to-gray-200 text-gray-900"}`}>
-      
-      {/* هيدر */}
+
+      {/* الهيدر */}
       <div className={`flex justify-between items-center p-4 shadow-lg border-b transition-colors duration-500
         ${theme === "dark"
           ? "bg-gradient-to-r from-gray-900 to-gray-800 text-teal-400 border-gray-700"
           : "bg-gradient-to-r from-emerald-100 to-teal-50 text-emerald-700 border-emerald-300"}`}>
-        
+
         <div className="flex flex-row items-center gap-3">
           <button onClick={() => setMenuOpen(true)} className="hover:scale-110 transition">
             <CiMenuBurger className="w-7 h-7" />
@@ -100,7 +108,9 @@ export default function MushafPage() {
             onClick={toggleTheme}
             className="p-2 rounded-full border hover:scale-110 transition"
           >
-            {theme === "dark" ? <Sun className="w-6 h-6 text-yellow-400" /> : <Moon className="w-6 h-6 text-indigo-600" />}
+            {theme === "dark"
+              ? <Sun className="w-6 h-6 text-yellow-400" />
+              : <Moon className="w-6 h-6 text-indigo-600" />}
           </button>
         </div>
       </div>
@@ -224,6 +234,7 @@ export default function MushafPage() {
   )
 }
 
+export default dynamic(() => Promise.resolve(Mushaf), { ssr: false })
 
 // "use client"
 // import React, { useEffect, useState } from "react"
