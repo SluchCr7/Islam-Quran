@@ -11,7 +11,7 @@ const app = express();
 
 // Middleware
 app.use(cors({
-    origin: process.env.FRONT_URL
+    origin: "https://islam-roan.vercel.app"
 }));
 app.use(express.json());
 
