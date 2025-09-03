@@ -31,38 +31,40 @@ export default function QuranPlayer() {
     () => reciters.find(r => String(r.id) === selectedReciterId) || null,
     [reciters, selectedReciterId]
   )
-  // 🟢 جلب الشيوخ
-  useEffect(() => {
-    const fetchReciters = async () => {
-      try {
-        const { data } = await axios.get(`${process.env.NEXT_PUBLIC_BACK_URL}/api/quran/reciters`);
-        console.log("📡 Reciters response:", data); // Debug
-
-        const list = data?.recitations || [];
-        setReciters(list);
-
-        if (list.length) setSelectedReciterId(String(list[0].id));
-      } catch (err) {
-        console.error("❌ خطأ في جلب الشيوخ:", err);
+  useEffect(()=> console.log(reciters) , [reciters])
+// 🟢 جلب الشيوخ
+useEffect(() => {
+  const fetchReciters = async () => {
+    try {
+      const { data } = await axios.get(`${process.env.NEXT_PUBLIC_BACK_URL}/api/quran/reciters`);
+      console.log("📡 Reciters response:", data); // Debug
+      setReciters(data || []);
+      if (data?.recitations?.length) {
+        setSelectedReciterId(String(data.recitations[0].id));
       }
-    };
-    fetchReciters();
-  }, []);
-
-
-  // 🟢 جلب السور
-  useEffect(() => {
-    const fetchSurahs = async () => {
-      try {
-        const { data } = await axios.get(`${process.env.NEXT_PUBLIC_BACK_URL}/api/quran/surahs`)
-        setSurahs(data || [])
-        if (data?.length) setSurahId(Number(data[0].id))
-      } catch (err) {
-        console.error("❌ خطأ في جلب السور:", err)
-      }
+    } catch (err) {
+      console.error("❌ خطأ في جلب الشيوخ:", err);
     }
-    fetchSurahs()
-  }, [])
+  };
+  fetchReciters();
+}, []);
+
+// 🟢 جلب السور
+useEffect(() => {
+  const fetchSurahs = async () => {
+    try {
+      const { data } = await axios.get(`${process.env.NEXT_PUBLIC_BACK_URL}/api/quran/surahs`);
+      console.log("📡 Surahs response:", data); // Debug
+      setSurahs(data?.surahs || []);
+      if (data?.surahs?.length) {
+        setSurahId(Number(data.surahs[0].id));
+      }
+    } catch (err) {
+      console.error("❌ خطأ في جلب السور:", err);
+    }
+  };
+  fetchSurahs();
+}, []);
 
   // 🟢 جلب التلاوة
   useEffect(() => {
