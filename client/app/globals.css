@@ -1,0 +1,20 @@
+
+@import "tailwindcss";
+
+@keyframes sun {0%,100%{transform:rotate(0deg);}50%{transform:rotate(10deg);}}
+.animate-sun {animation:sun 3s infinite alternate;}
+
+@keyframes cloud {0%,100%{transform:translateX(0);}50%{transform:translateX(5px);}}
+.animate-cloud {animation:cloud 4s infinite alternate;}
+
+@keyframes rain {0%{stroke-dashoffset:0;}100%{stroke-dashoffset:6;}}
+.animate-rain line {stroke-dasharray:6; animation:rain 1s infinite linear;}
+
+@keyframes snow {0%{transform:translateY(0);}100%{transform:translateY(6px);}}
+.animate-snow text {animation:snow 1s infinite alternate;}
+
+@keyframes thunder {0%,100%{opacity:1;}50%{opacity:0.5;}}
+.animate-thunder text {animation:thunder 0.3s infinite alternate;}
+
+@keyframes mist {0%,100%{opacity:0.7;}50%{opacity:1;}}
+.animate-mist ellipse {animation:mist 3s infinite alternate;}
