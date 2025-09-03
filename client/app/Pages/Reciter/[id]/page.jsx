@@ -2,7 +2,6 @@
 import React, { useState } from 'react'
 import { notFound } from 'next/navigation'
 import { motion } from 'framer-motion'
-import PopupQuranPlayer from '@/app/Components/QuranPlayerPopup'
 import { quranReciters } from '@/utils/quran'
 import { Speaker } from 'lucide-react'
 
