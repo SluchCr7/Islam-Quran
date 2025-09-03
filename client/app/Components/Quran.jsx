@@ -67,7 +67,7 @@ export default function QuranPlayer() {
     const fetchAyahs = async () => {
       try {
         const { data } = await axios.get(
-          `http://localhost:3001/api/quran/surah/${surahId}/${reciter.id}`
+          `${process.env.NEXT_PUBLIC_BACK_URL}/api/quran/surah/${surahId}/${reciter.id}`
         )
         const url = data?.audioUrl ? [data.audioUrl] : []
         setAyahs(url)

@@ -10,7 +10,9 @@ const app = express();
 // connectDB();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+    origin: process.env.FRONT_URL
+}));
 app.use(express.json());
 
 // Routes

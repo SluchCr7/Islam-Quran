@@ -125,7 +125,7 @@ const Hadith = () => {
 
   const fetchHadiths = async () => {
     try {
-      const res = await axios.get('http://localhost:3001/api/hadiths/all')
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_BACK_URL}/api/hadiths/all`)
       setHadiths(res.data.hadiths.data)
       if (res.data.hadiths.data.length > 0) {
         pickRandomHadith(res.data.hadiths.data)

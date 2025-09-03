@@ -24,7 +24,7 @@ export default function HadithBookPage() {
     async function fetchHadiths() {
       setLoading(true)
       try {
-        const res = await fetch(`http://localhost:3001/api/hadiths/${slug}`)
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACK_URL}/api/hadiths/${slug}`)
         const data = await res.json()
         setHadiths(data.hadiths?.data || [])
       } catch (error) {
