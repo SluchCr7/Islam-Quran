@@ -609,3 +609,16 @@ export const seerahEvents = [
     start: "0632-06-08"
   }
 ]
+
+  // خريطة تحويل الأسماء
+  export const recitersMap = {
+    "AbdulBaset AbdulSamad": "عبدالباسط عبدالصمد",
+    "Abdur-Rahman as-Sudais": "عبدالرحمن السديس",
+    "Abu Bakr al-Shatri": "أبو بكر الشاطري",
+    "Hani ar-Rifai": "هاني الرفاعي",
+    "Mahmoud Khalil Al-Husary": "محمود خليل الحصري",
+    "Mishari Rashid al-`Afasy": "مشاري بن راشد العفاسي",
+    "Mohamed Siddiq al-Minshawi": "محمد صديق المنشاوي",
+    "Sa`ud ash-Shuraym": "سعود الشريم",
+    "Mohamed al-Tablawi": "محمد محمود الطبلاوي"
+  };
