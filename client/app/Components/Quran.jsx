@@ -24,7 +24,6 @@ export default function QuranPlayer() {
   )
 
   // 🟢 جلب الشيوخ (معلق حالياً)
-  
   // useEffect(() => {
   //   const fetchReciters = async () => {
   //     try {
@@ -39,6 +38,7 @@ export default function QuranPlayer() {
   //   };
   //   fetchReciters();
   // }, []);
+
   // 🟢 جلب السور
   useEffect(() => {
     const fetchSurahs = async () => {
@@ -63,6 +63,7 @@ export default function QuranPlayer() {
         const { data } = await axios.get(
           `${process.env.NEXT_PUBLIC_BACK_URL}/api/quran/surah/${surahId}/8`
         )
+        console.log("🔊 رابط التلاوة:", data?.audioUrl)
         const url = data?.audioUrl ? [data.audioUrl] : []
         setAyahs(url)
         setIsPlaying(false)
@@ -75,16 +76,19 @@ export default function QuranPlayer() {
     fetchAyahs()
   }, [surahId])
 
-  // 🟢 تحديث الصوت
+  // 🟢 تحديث الصوت عند تغيير السورة
   useEffect(() => {
     const audio = audioRef.current
     if (!audio || !ayahs.length) return
+
     audio.src = ayahs[0]
     setProgress(0)
     setDuration(0)
-    if (isPlaying) {
-      const p = audio.play()
-      if (p && typeof p.catch === "function") p.catch(() => {})
+
+    // تشغيل تلقائي عند تحميل سورة جديدة
+    const p = audio.play()
+    if (p && typeof p.then === "function") {
+      p.then(() => setIsPlaying(true)).catch(() => setIsPlaying(false))
     }
   }, [ayahs])
 
@@ -105,6 +109,7 @@ export default function QuranPlayer() {
   const togglePlay = () => {
     const audio = audioRef.current
     if (!audio) return
+
     if (isPlaying) {
       audio.pause()
       setIsPlaying(false)
