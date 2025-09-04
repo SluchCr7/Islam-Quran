@@ -1,74 +1,48 @@
 // Controller/quranController.js
 const axios = require("axios");
 
-// ✅ جلب قائمة الشيوخ
-const getReciters = async (req, res) => {
+// ✅ جلب سور المنشاوي (مرتل أو مجود)
+const getMinshawiSurahs = async (req, res) => {
   try {
-    const { data } = await axios.get("https://api.quran.com/api/v4/resources/recitations");
+    const { style } = req.params; // "murattal" أو "mujaawwad"
 
-    if (!data || !data.recitations) {
+    const { data } = await axios.get("https://mp3quran.net/api/_arabic.json");
+
+    if (!data || !data.reciters) {
       return res.status(404).json({ message: "لم يتم العثور على الشيوخ" });
     }
 
-    // رجع شكل ثابت للفرونت
-    const reciters = data.recitations.map((r) => ({
-      id: r.id,
-      reciter_name: r.reciter_name,
-      style: r.style || null,
-    }));
+    // اختار الشيخ حسب النمط المطلوب
+    const reciter = data.reciters.find((r) => {
+      if (style === "murattal") return r.name.includes("محمد صديق المنشاوي") && r.name.includes("مرتل");
+      if (style === "mujaawwad") return r.name.includes("محمد صديق المنشاوي") && r.name.includes("مجود");
+      return false;
+    });
 
-    res.json({ recitations: reciters });
-  } catch (err) {
-    console.error("❌ Error fetching reciters:", err.message);
-    res.status(500).json({ message: "خطأ في جلب قائمة الشيوخ" });
-  }
-};
-
-// ✅ جلب قائمة السور
-const getSurahs = async (req, res) => {
-  try {
-    const { data } = await axios.get("https://api.quran.com/api/v4/chapters");
-
-    if (!data || !data.chapters) {
-      return res.status(404).json({ message: "لم يتم العثور على السور" });
+    if (!reciter) {
+      return res.status(404).json({ message: "لم يتم العثور على تلاوات المنشاوي بهذا النمط" });
     }
 
-    const surahs = data.chapters.map((surah) => ({
-      id: surah.id,
-      name_ar: surah.name_arabic,
-      name_en: surah.name_simple,
-      revelation_place: surah.revelation_place,
-      verses_count: surah.verses_count,
-    }));
-
-    res.json({ surahs });
-  } catch (err) {
-    console.error("❌ Error fetching surahs:", err.message);
-    res.status(500).json({ message: "خطأ في جلب قائمة السور" });
-  }
-};
-
-// ✅ جلب سورة بصوت شيخ
-const getSurahAudio = async (req, res) => {
-  try {
-    const { id, reciterId } = req.params;
-    const { data } = await axios.get(
-      `https://api.quran.com/api/v4/chapter_recitations/${reciterId}/${id}`
-    );
-
-    if (!data || !data.audio_file) {
-      return res.status(404).json({ message: "لم يتم العثور على السورة" });
-    }
+    // رجع السور مع روابط الصوت
+    const surahs = reciter.suras.split(",").map((s) => {
+      const surahNum = s.padStart(3, "0"); // صيغة 001.mp3
+      return {
+        id: parseInt(s),
+        name: `سورة ${s}`, // لاحقاً ممكن نجيب أسماء السور بالعربي من ملف خارجي
+        audioUrl: `${reciter.server}${surahNum}.mp3`,
+      };
+    });
 
     res.json({
-      surahId: id,
-      reciterId,
-      audioUrl: data.audio_file.audio_url,
+      reciter: reciter.name,
+      rewaya: reciter.rewaya,
+      style,
+      surahs,
     });
   } catch (err) {
-    console.error("❌ Error fetching surah audio:", err.message);
-    res.status(500).json({ message: "خطأ في جلب تلاوة السورة" });
+    console.error("❌ Error fetching Minshawi surahs:", err.message);
+    res.status(500).json({ message: "خطأ في جلب سور المنشاوي" });
   }
 };
 
-module.exports = { getReciters, getSurahs, getSurahAudio };
+module.exports = { getMinshawiSurahs };

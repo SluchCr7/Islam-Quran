@@ -119,14 +119,18 @@ export default function IslamicDashboard() {
         <PrayerCardsGrid todayList={todayList} nextKey={next?.key} PRAYER_META={PRAYER_META} PRAYER_BG={PRAYER_BG} />
 
         {/* Quran & Compass */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full min-h-[400px]">
-          <div className="lg:col-span-2 w-full h-full min-h-[400px] rounded-2xl overflow-hidden shadow-xl">
-            <QuranPlayer className="w-full h-full min-h-[400px]" />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full min-h-[400px] items-stretch">
+          {/* Quran Player (أوسع عمودين) */}
+          <div className="lg:col-span-2 rounded-2xl overflow-hidden shadow-xl h-full">
+            <QuranPlayer className="w-full h-full" />
           </div>
-          <div className="lg:col-span-1 w-full h-full min-h-[400px] rounded-2xl overflow-hidden shadow-xl">
-            <QiblaCompass className="w-full h-full min-h-[400px]" />
+
+          {/* Qibla Compass (عمود واحد) */}
+          <div className="lg:col-span-1 rounded-2xl overflow-hidden shadow-xl h-full">
+            <QiblaCompass className="w-full h-full" />
           </div>
         </div>
+
 
         {/* Hijri Calendar */}
         <motion.div
@@ -144,10 +148,10 @@ export default function IslamicDashboard() {
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7 }}
-            className="flex flex-col lg:flex-row gap-6"
+            className="flex flex-col lg:flex-row gap-6 items-stretch"
           >
             {/* Hadith */}
-            <div className="lg:flex-1 backdrop-blur-lg bg-slate-900/60 p-2 rounded-2xl shadow-xl min-h-[300px] flex flex-col">
+            <div className="lg:flex-1 backdrop-blur-lg bg-slate-900/60 rounded-2xl shadow-xl flex flex-col">
               <Hadith />
             </div>
 
@@ -155,19 +159,22 @@ export default function IslamicDashboard() {
             <motion.div
               whileHover={{ scale: 1.05, rotate: 1 }}
               whileTap={{ scale: 0.97 }}
-              className="lg:w-64 flex flex-col justify-center items-center p-6 rounded-2xl shadow-xl relative overflow-hidden font-bold text-lg"
+              className="lg:w-72 flex flex-col justify-center items-center rounded-2xl shadow-xl relative overflow-hidden font-bold text-lg"
             >
               {/* خلفية المصحف */}
-              <div 
+              <div
                 className="absolute inset-0 bg-cover bg-center blur-sm scale-110"
                 style={{ backgroundImage: "url('/quranKarem.jpg')" }}
               />
-              
+
               {/* طبقة تعتيم */}
               <div className="absolute inset-0 bg-black/60" />
 
               {/* المحتوى */}
-              <Link href="/Pages/Quran" className="relative z-10 flex flex-col items-center gap-3">
+              <Link
+                href="/Pages/Quran"
+                className="relative z-10 flex flex-col items-center gap-3 py-8"
+              >
                 <div className="relative flex items-center justify-center">
                   <div className="absolute inset-0 w-20 h-20 rounded-full bg-yellow-400/20 blur-xl"></div>
                   <BookOpen className="w-12 h-12 z-10 text-yellow-400 drop-shadow-lg" />
@@ -177,9 +184,9 @@ export default function IslamicDashboard() {
                 </span>
               </Link>
             </motion.div>
-
           </motion.div>
         </div>
+
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
           {books.map((book) => {
@@ -222,17 +229,17 @@ export default function IslamicDashboard() {
         {/* Grid الطقس + أسماء الله الحسنى + السيرة */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* الطقس */}
-          <div className="lg:col-span-1 w-full min-h-[300px] flex">
+          <div className="lg:col-span-1 w-full min-h-[250px] flex">
             <WeatherWidgetPremium className="w-full h-full" />
           </div>
 
           {/* أسماء الله الحسنى */}
-          <div className="lg:col-span-2 w-full min-h-[300px] flex">
+          <div className="lg:col-span-2 w-full min-h-[250px] flex">
             <Counter className="w-full h-full" />
           </div>
 
           {/* السيرة النبوية */}
-          <div className="lg:col-span-1 w-full min-h-[300px] flex">
+          <div className="lg:col-span-1 w-full min-h-[250px] flex">
             <SeerahWidgetPro />
           </div>
         </div>

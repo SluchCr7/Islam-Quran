@@ -27,7 +27,7 @@ const Counter = () => {
   const percentage = (num / MAX_COUNT) * 33
 
   return (
-    <div className="w-full h-full flex items-center justify-center p-6">
+    <div className="w-full h-full flex items-center justify-center">
       <div className="relative w-full max-w-xl p-8 text-center overflow-hidden rounded-3xl bg-slate-900/70 backdrop-blur-xl border border-emerald-600 shadow-2xl">
 
         {/* خلفية النجوم */}

@@ -34,12 +34,12 @@ export function NextPrayerCard({ next, prev }) {
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="relative rounded-3xl overflow-hidden shadow-2xl p-6 bg-gradient-to-br from-green-800 via-green-900 to-green-700 text-white"
+      className="relative rounded-3xl h-full overflow-hidden shadow-2xl p-6 bg-gradient-to-br from-green-800 via-green-900 to-green-700 text-white"
     >
       {/* Pattern الخلفية */}
       <div className="absolute inset-0 opacity-10 bg-[url('/patterns/islamic-bg.svg')] bg-cover"></div>
 
-      <div className="relative flex flex-col lg:flex-row items-center gap-6">
+      <div className="relative flex flex-col h-full w-full lg:flex-row items-center justify-center gap-6">
         {/* دائرة التقدم */}
         <div className="relative w-40 h-40 shrink-0">
           <svg className="w-full h-full -rotate-90">

@@ -1,9 +1,15 @@
-export default function SurahInfo({ surahs, surahId, ayahs }) {
+"use client"
+
+export default function SurahInfo({ surahs, surahId }) {
+  const surah = surahs.find((s) => s.id === surahId)
+  if (!surah) return null
+
   return (
-    <div className="mt-6 text-lg text-gray-200 font-medium text-center">
-      {ayahs.length
-        ? `سورة ${surahs.find((s) => Number(s.id) === Number(surahId))?.name_ar || "سورة"}`
-        : "⏳ جاري تحميل التلاوة..."}
+    <div className="text-center mb-6">
+      <h3 className="text-xl font-semibold text-green-400">{surah.name}</h3>
+      <p className="text-sm text-gray-400">
+        سورة رقم {surah.id} – عدد الآيات: {surah.ayahs}
+      </p>
     </div>
   )
 }

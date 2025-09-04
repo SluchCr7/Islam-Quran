@@ -11,8 +11,8 @@ const app = express();
 
 // Middleware
 app.use(cors({
-    origin: "https://islam-roan.vercel.app"
-    // origin: "http://localhost:3000"
+    // origin: "https://islam-roan.vercel.app"
+    origin: "http://localhost:3000"
 }));
 app.use(express.json());
 

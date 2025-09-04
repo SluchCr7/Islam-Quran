@@ -184,8 +184,8 @@ export default function QiblaCompass({ size = 220 }) {
   })()
 
   return (
-    <div className="max-w-md w-full min-h-[350px]">
-      <div className="rounded-2xl bg-[#0d1117] border border-[#30363d] p-4 shadow-md text-center">
+    <div className="max-w-md w-full h-full">
+      <div className="rounded-2xl bg-[#0d1117] h-full border border-[#30363d] p-4 shadow-md text-center">
         <h3 className="text-lg font-bold mb-2">🧭 بوصلة القبلة</h3>
 
         <p className="text-sm text-[#9aa3ad] mb-3">{statusText}</p>

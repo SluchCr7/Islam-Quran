@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
-import { Wind, Droplets, Thermometer, Compass } from 'lucide-react';
+import { Wind, Droplets, Thermometer, Compass, MapPin } from 'lucide-react';
 
 // خلفيات ديناميكية
 const weatherColors = {
@@ -24,10 +24,36 @@ const weatherColors = {
   },
 };
 
+// ترجمة الحالات الجوية
+const weatherTranslations = {
+  Clear: "صافي",
+  Clouds: "غائم",
+  Rain: "ممطر",
+  Snow: "ثلجي",
+  Thunderstorm: "عاصفة رعدية",
+  Mist: "ضباب",
+};
+
 export default function WeatherWidgetPremium() {
   const [weather, setWeather] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isNight, setIsNight] = useState(false);
+  const [locationName, setLocationName] = useState("");
+
+  // جلب اسم المدينة عبر reverse geocoding
+  const fetchLocationName = async (lat, lon) => {
+    try {
+      const res = await axios.get(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`
+      );
+      if (res.data?.address) {
+        const { city, town, village, country } = res.data.address;
+        setLocationName(`${city || town || village || "موقعك"}، ${country || ""}`);
+      }
+    } catch (err) {
+      console.error("Error fetching location name:", err);
+    }
+  };
 
   const fetchWeather = async (lat, lon) => {
     try {
@@ -38,7 +64,9 @@ export default function WeatherWidgetPremium() {
       const humidity = res.data.hourly.relativehumidity_2m[0];
       const feelsLike = res.data.hourly.apparent_temperature[0];
 
-      setWeather({ ...current, humidity, feelsLike });
+      const data = { ...current, humidity, feelsLike };
+      setWeather(data);
+      localStorage.setItem("lastWeather", JSON.stringify(data));
       setLoading(false);
 
       // تحديد الليل/النهار
@@ -53,11 +81,25 @@ export default function WeatherWidgetPremium() {
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (pos) => fetchWeather(pos.coords.latitude, pos.coords.longitude),
-        () => setLoading(false)
+        (pos) => {
+          const { latitude, longitude } = pos.coords;
+          fetchWeather(latitude, longitude);
+          fetchLocationName(latitude, longitude);
+        },
+        () => {
+          // fallback: حاول تجيب آخر بيانات مخزنة
+          const last = localStorage.getItem("lastWeather");
+          if (last) setWeather(JSON.parse(last));
+          setLoading(false);
+        }
       );
-    } else setLoading(false);
+    } else {
+      const last = localStorage.getItem("lastWeather");
+      if (last) setWeather(JSON.parse(last));
+      setLoading(false);
+    }
 
+    // تحديث كل 10 دقائق
     const interval = setInterval(() => {
       navigator.geolocation?.getCurrentPosition(
         (pos) => fetchWeather(pos.coords.latitude, pos.coords.longitude)
@@ -74,7 +116,9 @@ export default function WeatherWidgetPremium() {
   const feelsLike = Math.round(weather.feelsLike);
   const humidity = weather.humidity;
   const windSpeed = weather.windspeed;
+  const windDirection = weather.winddirection;
 
+  // تحديد الحالة الجوية
   const weatherCode = weather.weathercode;
   let mainWeather = 'Clear';
   if ([1,2,3].includes(weatherCode)) mainWeather = 'Clouds';
@@ -97,18 +141,30 @@ export default function WeatherWidgetPremium() {
 
       {/* المحتوى */}
       <div className="relative z-10 flex items-center flex-col justify-center">
+        {/* أيقونة الطقس */}
         <motion.div
           initial={{ rotate: -20 }}
           animate={{ rotate: 20 }}
           transition={{ repeat: Infinity, duration: 6, repeatType: 'reverse' }}
           className="mx-auto mb-4"
         >
-          <span className="text-7xl">{mainWeather === 'Rain' ? '🌧️' : mainWeather === 'Snow' ? '❄️' : mainWeather === 'Thunderstorm' ? '⛈️' : mainWeather === 'Clouds' ? '☁️' : '☀️'}</span>
+          <span className="text-7xl">
+            {mainWeather === 'Rain' ? '🌧️' : 
+             mainWeather === 'Snow' ? '❄️' : 
+             mainWeather === 'Thunderstorm' ? '⛈️' : 
+             mainWeather === 'Clouds' ? '☁️' : '☀️'}
+          </span>
         </motion.div>
 
-        <h2 className="text-3xl font-bold">{mainWeather}</h2>
+        {/* حالة الطقس + المدينة */}
+        <h2 className="text-2xl font-bold flex items-center gap-2">
+          <MapPin className="w-5 h-5" /> {locationName || "موقعك"}
+        </h2>
+        <p className="text-lg mt-1">{weatherTranslations[mainWeather]}</p>
         <p className="text-5xl font-extrabold mt-2">{temp}°C</p>
-        <p className="text-sm mt-1">{new Date().toLocaleDateString('ar-EG', { weekday: 'long', hour: '2-digit', minute: '2-digit' })}</p>
+        <p className="text-sm mt-1">
+          {new Date().toLocaleDateString('ar-EG', { weekday: 'long', hour: '2-digit', minute: '2-digit' })}
+        </p>
 
         {/* معلومات إضافية */}
         <div className="grid grid-cols-3 gap-4 mt-6 text-sm">
@@ -123,7 +179,7 @@ export default function WeatherWidgetPremium() {
             <p className="font-bold">{humidity}%</p>
           </div>
           <div className="flex flex-col items-center">
-            <Compass className="w-6 h-6 mb-1" />
+            <Compass className="w-6 h-6 mb-1 transform" style={{ transform: `rotate(${windDirection}deg)` }} />
             <p>الرياح</p>
             <p className="font-bold">{windSpeed} كم/س</p>
           </div>
