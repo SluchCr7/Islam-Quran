@@ -14,7 +14,7 @@ connectDB();
 // Middleware
 const allowedOrigins = [
   "https://islam-mu.vercel.app",
-  "http://localhost:3000",
+  // "http://localhost:3000",
 ];
 app.use(cors({
   origin: function (origin, callback) {
