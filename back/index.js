@@ -33,10 +33,10 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
-app.use("/api/auth", require("../Routes/UserRoutes"));
-app.use("/api/quran", require("../Routes/quranRoutes"));
-app.use("/api/hadiths", require("../Routes/hadithRoutes"));
-app.use("/api/reciter", require("../Routes/ReciterRoutes"));
+app.use("/api/auth", require("./Routes/UserRoutes"));
+app.use("/api/quran", require("./Routes/quranRoutes"));
+app.use("/api/hadiths", require("./Routes/hadithRoutes"));
+app.use("/api/reciter", require("./Routes/ReciterRoutes"));
 
 app.use(errorhandler);
 
