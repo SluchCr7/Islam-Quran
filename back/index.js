@@ -2,7 +2,7 @@ const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const path = require("path");
-const connectDB = require("../config/db");   // المسار الصحيح حسب مشروعك
+const connectDB = require("./config/db");   // المسار الصحيح حسب مشروعك
 const { errorhandler } = require("../Middelwares/errorHandler");
 
 dotenv.config();
