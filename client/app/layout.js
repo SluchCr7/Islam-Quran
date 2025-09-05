@@ -3,6 +3,7 @@ import "./globals.css";
 import { PrayersContextProvider } from "./Context/PrayerContext";
 import { AuthProvider } from "./Context/UserContext";
 import { AlertContextProvider } from "./Context/AlertContext";
+import { ReciterProvider } from "./Context/RecitersContext";
 
 
 const AmiriQuran = Amiri_Quran({
@@ -24,9 +25,11 @@ export default function RootLayout({ children }) {
       >
         <AlertContextProvider>
           <AuthProvider>
-            <PrayersContextProvider>
-              {children}
-            </PrayersContextProvider>
+            <ReciterProvider>
+              <PrayersContextProvider>
+                {children}
+              </PrayersContextProvider>
+            </ReciterProvider>
           </AuthProvider>
         </AlertContextProvider>
       </body>
