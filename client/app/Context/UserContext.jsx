@@ -3,7 +3,7 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
 import swal from 'sweetalert';
 import { useAlert } from "./AlertContext";
-
+import Swal from "sweetalert2";
 // ✅ إنشاء السياق
 const AuthContext = createContext();
 
@@ -62,7 +62,7 @@ export const AuthProvider = ({ children }) => {
         { withCredentials: true }
       );
       showAlert(res.data.message);
-      setTimeout(() => window.location.href = '/Pages/Login', 2000);
+      setTimeout(() => window.location.href = '/Login', 2000);
     } catch (err) {
       throw err.response?.data || { message: "خطأ في التسجيل" };
     }
@@ -72,17 +72,24 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     try {
       await axios.post(`${process.env.NEXT_PUBLIC_BACK_URL}/api/auth/logout`);
-      swal({
-        title: 'Are you sure?',
-        text: 'You are going to logout from your account!',
-        icon: 'warning',
-        buttons: true,
-        dangerMode: true,
-      }).then((willLogout) => {
-        if (willLogout) {
+
+      Swal.fire({
+        title: "هل أنت متأكد؟",
+        text: "سيتم تسجيل خروجك من الحساب",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "نعم، سجل الخروج",
+        cancelButtonText: "إلغاء",
+        background: "#0d1117",  // خلفية داكنة (لو تحب)
+        color: "#fff",          // لون النص
+      }).then((result) => {
+        if (result.isConfirmed) {
           setUser(null);
           setIsLogin(false);
-          localStorage.removeItem('user');
+          localStorage.removeItem("user");
+          Swal.fire("تم تسجيل الخروج!", "", "success");
         }
       });
     } catch (err) {

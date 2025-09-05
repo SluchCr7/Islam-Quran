@@ -612,9 +612,10 @@ export default function IslamicDashboard() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  // استرجاع حالة التفعيل
+    // استرجاع حالة التفعيل
   useEffect(() => {
     const saved = localStorage.getItem("adhan-enabled")
+    console.log("⏺ Saved setting:", saved)
     if (saved === "true") setEnabled(true)
   }, [])
 
@@ -674,11 +675,13 @@ export default function IslamicDashboard() {
         await Notification.requestPermission()
       }
       const audio = new Audio("/silent.mp3")
-      await audio.play()
+      await audio.play().catch(() => {
+        console.warn("Autoplay blocked temporarily, but we'll enable anyway.")
+      })
       setEnabled(true)
       localStorage.setItem("adhan-enabled", "true")
     } catch (err) {
-      console.error("Autoplay blocked:", err)
+      console.error("خطأ في التفعيل:", err)
     }
   }
 
