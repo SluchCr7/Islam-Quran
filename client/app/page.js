@@ -674,7 +674,7 @@ export default function IslamicDashboard() {
       if (Notification.permission !== "granted") {
         await Notification.requestPermission()
       }
-      const audio = new Audio("/silent.mp3")
+      const audio = new Audio("/adahn.mp3")
       await audio.play().catch(() => {
         console.warn("Autoplay blocked temporarily, but we'll enable anyway.")
       })
