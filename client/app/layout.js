@@ -1,6 +1,8 @@
 import { Amiri_Quran, Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { PrayersContextProvider } from "./Context/PrayerContext";
+import { AuthProvider } from "./Context/UserContext";
+import { AlertContextProvider } from "./Context/AlertContext";
 
 
 const AmiriQuran = Amiri_Quran({
@@ -20,9 +22,13 @@ export default function RootLayout({ children }) {
       <body
         className={`bg-[#0d1117] ${AmiriQuran.variable} font-sans antialiased`}
       >
-        <PrayersContextProvider>
-          {children}
-        </PrayersContextProvider>
+        <AlertContextProvider>
+          <AuthProvider>
+            <PrayersContextProvider>
+              {children}
+            </PrayersContextProvider>
+          </AuthProvider>
+        </AlertContextProvider>
       </body>
     </html>
   );

@@ -134,13 +134,13 @@ export default function WeatherWidgetPremium() {
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8 }}
-      className={`max-w-md mx-auto p-6 rounded-3xl shadow-2xl bg-gradient-to-br ${colors} text-white text-center relative overflow-hidden`}
+      className={`max-w-md mx-auto p-6 rounded-3xl h-full shadow-2xl bg-gradient-to-br ${colors} text-white text-center relative overflow-hidden`}
     >
       {/* خلفية زجاجية */}
       <div className="absolute inset-0 backdrop-blur-sm bg-black/10 rounded-3xl"></div>
 
       {/* المحتوى */}
-      <div className="relative z-10 flex items-center flex-col justify-center">
+      <div className="relative z-10 h-full flex items-center flex-col justify-center w-full">
         {/* أيقونة الطقس */}
         <motion.div
           initial={{ rotate: -20 }}

@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { BookOpen, RefreshCw, Copy, Share2 } from 'lucide-react'
 import { FaRegCopy } from "react-icons/fa";
+import { IoShareSocialOutline } from "react-icons/io5";
 
 const Hadith = () => {
   const [hadiths, setHadiths] = useState([])
@@ -60,7 +61,7 @@ const Hadith = () => {
   }, [])
 
   return (
-    <div dir="rtl" className="flex justify-center  w-full h-full">
+    <div dir="rtl" className="flex justify-center px-2 py-3 w-full h-full">
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
@@ -93,6 +94,13 @@ const Hadith = () => {
                 className="p-3 rounded-full bg-gradient-to-r from-green-500 to-yellow-400 shadow-lg hover:scale-110 hover:shadow-yellow-400/60 transition"
               >
                 <FaRegCopy className={`w-6 h-6 text-white ${loading ? 'animate-spin' : ''}`} />
+              </button>
+              <button
+                onClick={() => shareHadith()}
+                disabled={loading}
+                className="p-3 rounded-full bg-gradient-to-r from-green-500 to-yellow-400 shadow-lg hover:scale-110 hover:shadow-yellow-400/60 transition"
+              >
+                <IoShareSocialOutline className={`w-6 h-6 text-white ${loading ? 'animate-spin' : ''}`} />
               </button>
             </div>
           </div>

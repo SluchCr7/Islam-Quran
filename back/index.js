@@ -7,12 +7,13 @@ const path = require('path');
 const app = express();
 
 // Connect to DB
-// connectDB();
+connectDB();
 
 // Middleware
 app.use(cors({
-    origin: "https://islam-roan.vercel.app"
-    // origin: "http://localhost:3000"
+    origin: "https://islam-roan.vercel.app",
+    // origin: "http://localhost:3000", 
+    credentials: true
 }));
 app.use(express.json());
 
@@ -20,8 +21,10 @@ app.use(express.json());
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 })
+app.use("/api/auth", require("./Routes/UserRoutes"));
 app.use("/api/quran", require("./Routes/quranRoutes"));
 app.use("/api/hadiths", require("./Routes/hadithRoutes"));
+app.use("/api/reciter", require("./Routes/ReciterRoutes"));
 
 // Run Server
 const PORT = process.env.PORT || 5000;
