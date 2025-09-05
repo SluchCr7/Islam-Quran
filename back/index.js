@@ -3,6 +3,7 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const connectDB = require("./config/db");
 const path = require("path");
+const { errorhandler } = require("./Middelwares/errorHandler");
 
 dotenv.config();
 const app = express();
@@ -36,7 +37,7 @@ app.use("/api/auth", require("./Routes/UserRoutes"));
 app.use("/api/quran", require("./Routes/quranRoutes"));
 app.use("/api/hadiths", require("./Routes/hadithRoutes"));
 app.use("/api/reciter", require("./Routes/ReciterRoutes"));
-
+app.use(errorhandler)
 // ⛔️ لا تستخدم listen على Vercel
 module.exports = app;
 

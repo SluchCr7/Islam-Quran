@@ -2,6 +2,7 @@
 import { Compass, Sparkles, LogOut, User, Settings, LogIn } from "lucide-react"
 import { useAuth } from "../Context/UserContext"
 import { useState } from "react"
+import Link from "next/link"
 
 export function SiteHeader() {
   const { user, isLogin, logout } = useAuth()
@@ -24,10 +25,10 @@ export function SiteHeader() {
         {/* Right Side */}
         <div className="flex items-center gap-6">
           {!isLogin ? (
-            <button className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 transition px-4 py-2 rounded-xl text-sm font-bold shadow-md">
+            <Link href="/Login" className="flex cursor-pointer items-center gap-2 bg-emerald-600 hover:bg-emerald-700 transition px-4 py-2 rounded-xl text-sm font-bold shadow-md">
               <LogIn className="w-4 h-4" />
               تسجيل الدخول
-            </button>
+            </Link>
           ) : (
             <div className="relative">
               {/* User Avatar */}
