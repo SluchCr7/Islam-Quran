@@ -1,48 +1,24 @@
-// Controller/quranController.js
-const axios = require("axios");
+import fetch from "node-fetch"
 
-// ✅ جلب سور المنشاوي (مرتل أو مجود)
-const getMinshawiSurahs = async (req, res) => {
+// 🕌 جلب صفحة معينة
+export const getPage = async (req, res) => {
+  const { page } = req.params
   try {
-    const { style } = req.params; // "murattal" أو "mujaawwad"
-
-    const { data } = await axios.get("https://mp3quran.net/api/_arabic.json");
-
-    if (!data || !data.reciters) {
-      return res.status(404).json({ message: "لم يتم العثور على الشيوخ" });
-    }
-
-    // اختار الشيخ حسب النمط المطلوب
-    const reciter = data.reciters.find((r) => {
-      if (style === "murattal") return r.name.includes("محمد صديق المنشاوي") && r.name.includes("مرتل");
-      if (style === "mujaawwad") return r.name.includes("محمد صديق المنشاوي") && r.name.includes("مجود");
-      return false;
-    });
-
-    if (!reciter) {
-      return res.status(404).json({ message: "لم يتم العثور على تلاوات المنشاوي بهذا النمط" });
-    }
-
-    // رجع السور مع روابط الصوت
-    const surahs = reciter.suras.split(",").map((s) => {
-      const surahNum = s.padStart(3, "0"); // صيغة 001.mp3
-      return {
-        id: parseInt(s),
-        name: `سورة ${s}`, // لاحقاً ممكن نجيب أسماء السور بالعربي من ملف خارجي
-        audioUrl: `${reciter.server}${surahNum}.mp3`,
-      };
-    });
-
-    res.json({
-      reciter: reciter.name,
-      rewaya: reciter.rewaya,
-      style,
-      surahs,
-    });
-  } catch (err) {
-    console.error("❌ Error fetching Minshawi surahs:", err.message);
-    res.status(500).json({ message: "خطأ في جلب سور المنشاوي" });
+    const response = await fetch(`https://api.alquran.cloud/v1/page/${page}/quran-uthmani`)
+    const data = await response.json()
+    res.json(data) // ممكن ترجع بس ayahs لو محتاج
+  } catch (error) {
+    res.status(500).json({ message: "خطأ في جلب بيانات الصفحة", error })
   }
-};
+}
 
-module.exports = { getMinshawiSurahs };
+// 📖 جلب كل السور
+export const getSurahs = async (req, res) => {
+  try {
+    const response = await fetch("https://api.alquran.cloud/v1/surah")
+    const data = await response.json()
+    res.json(data)
+  } catch (error) {
+    res.status(500).json({ message: "خطأ في جلب بيانات السور", error })
+  }
+}

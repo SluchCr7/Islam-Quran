@@ -1,10 +1,12 @@
-// routes/quranRoutes.js
-const express = require("express");
-const { getMinshawiSurahs } = require("../Controller/quranController");
+import express from "express"
+import { getPage, getSurahs } from "../controllers/quranController.js"
 
-const router = express.Router();
+const router = express.Router()
 
-// ✅ جلب سور المنشاوي مرتل أو مجود
-router.get("/minshawi/:style", getMinshawiSurahs);
+// جلب صفحة
+router.get("/page/:page", getPage)
 
-module.exports = router;
+// جلب السور
+router.get("/surahs", getSurahs)
+
+export default router

@@ -30,7 +30,7 @@ export const QuranProvider = ({ children }) => {
 
   // ✅ جلب الآيات حسب الصفحة
   useEffect(() => {
-    fetch(`https://api.alquran.cloud/v1/page/${page}/${edition}`)
+    fetch(`${process.env.NEXT_PUBLIC_BACK_URL}/api/quran/page/${page}`)
       .then(res => res.json())
       .then(data => setAyahs(data.data.ayahs))
       .catch(err => console.error(err))
@@ -42,7 +42,7 @@ export const QuranProvider = ({ children }) => {
 
   // ✅ جلب السور مرة واحدة
   useEffect(() => {
-    fetch(`https://api.alquran.cloud/v1/surah`)
+    fetch(`${process.env.NEXT_PUBLIC_BACK_URL}/api/quran/surahs`)
       .then(res => res.json())
       .then(data => setSurahs(data.data))
       .catch(err => console.error(err))

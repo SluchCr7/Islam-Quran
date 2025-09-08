@@ -34,7 +34,7 @@ export default function UserProfileForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="max-w-md mx-auto bg-white dark:bg-slate-900 p-6 rounded-xl shadow-md space-y-4"
+      className="w-full p-5 rounded-xl shadow-md space-y-4"
     >
       <h2 className="text-xl font-bold text-center text-slate-700 dark:text-slate-200">
         Edit Profile
