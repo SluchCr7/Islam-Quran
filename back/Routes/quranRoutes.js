@@ -1,5 +1,5 @@
 import express from "express"
-import { getPage, getSurahs } from "../controllers/quranController.js"
+import { getPage, getSurahs } from "../Controller/quranController"
 
 const router = express.Router()
 
