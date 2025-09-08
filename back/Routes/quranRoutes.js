@@ -1,5 +1,5 @@
-import express from "express"
-import { getPage, getSurahs } from "../Controller/quranController"
+const express = require("express")
+const { getPage, getSurahs } = require("../Controller/quranController")
 
 const router = express.Router()
 
@@ -9,4 +9,4 @@ router.get("/page/:page", getPage)
 // جلب السور
 router.get("/surahs", getSurahs)
 
-export default router
+module.exports = router

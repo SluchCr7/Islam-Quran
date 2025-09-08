@@ -1,7 +1,7 @@
-import axios from "axios"
+const axios = require("axios")
 
 // 🕌 جلب صفحة معينة
-export const getPage = async (req, res) => {
+const getPage = async (req, res) => {
   const { page } = req.params
   try {
     const response = await axios.get(
@@ -16,7 +16,7 @@ export const getPage = async (req, res) => {
 }
 
 // 📖 جلب كل السور
-export const getSurahs = async (req, res) => {
+const getSurahs = async (req, res) => {
   try {
     const response = await axios.get("https://api.alquran.cloud/v1/surah")
     res.json(response.data)
@@ -26,3 +26,5 @@ export const getSurahs = async (req, res) => {
       .json({ message: "خطأ في جلب بيانات السور", error: error.message })
   }
 }
+
+module.exports = { getPage, getSurahs }

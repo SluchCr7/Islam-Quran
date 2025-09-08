@@ -1,5 +1,12 @@
 "use client"
 import React, { createContext, useContext, useEffect, useState } from "react"
+import axios from "axios"
+
+// ✨ إنشاء axios instance علشان نستعمله في أي طلب
+const api = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_BACK_URL + "/api/quran",
+  headers: { "Content-Type": "application/json" },
+})
 
 const QuranContext = createContext()
 
@@ -30,22 +37,31 @@ export const QuranProvider = ({ children }) => {
 
   // ✅ جلب الآيات حسب الصفحة
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_BACK_URL}/api/quran/page/${page}`)
-      .then(res => res.json())
-      .then(data => setAyahs(data.data.ayahs))
-      .catch(err => console.error(err))
-
-    if (typeof window !== "undefined") {
-      localStorage.setItem("lastPage", page)
+    const getAyahs = async () => {
+      try {
+        const { data } = await api.get(`/page/${page}`)
+        setAyahs(data.data.ayahs) // ⚡️ API بيرجع data.data.ayahs
+        if (typeof window !== "undefined") {
+          localStorage.setItem("lastPage", page)
+        }
+      } catch (err) {
+        console.error("خطأ في جلب الآيات:", err.message)
+      }
     }
+    getAyahs()
   }, [page])
 
   // ✅ جلب السور مرة واحدة
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_BACK_URL}/api/quran/surahs`)
-      .then(res => res.json())
-      .then(data => setSurahs(data.data))
-      .catch(err => console.error(err))
+    const getSurahs = async () => {
+      try {
+        const { data } = await api.get("/surahs")
+        setSurahs(data.data) // ⚡️ API بيرجع data.data
+      } catch (err) {
+        console.error("خطأ في جلب السور:", err.message)
+      }
+    }
+    getSurahs()
   }, [])
 
   // ✅ الحفظ على Bookmark
