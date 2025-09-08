@@ -168,7 +168,7 @@ import { motion } from 'framer-motion'
 import { BookOpen, RefreshCw } from 'lucide-react'
 import { FaRegCopy } from "react-icons/fa"
 import { IoShareSocialOutline } from "react-icons/io5"
-import { useHadith } from '../context/HadithContext'
+import { useHadith } from '../Context/HadithContext'
 
 const Hadith = () => {
   const {

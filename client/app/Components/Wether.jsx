@@ -194,7 +194,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Wind, Droplets, Thermometer, Compass, MapPin } from 'lucide-react';
-import { useWeather } from '../context/WeatherContext';
+import { useWeather } from '../Context/WeatherContext';
 
 // 🎨 الخلفيات
 const weatherColors = {

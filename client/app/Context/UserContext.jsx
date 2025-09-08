@@ -1,7 +1,6 @@
 'use client'
 import React, { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
-import swal from 'sweetalert';
 import { useAlert } from "./AlertContext";
 import Swal from "sweetalert2";
 // ✅ إنشاء السياق
