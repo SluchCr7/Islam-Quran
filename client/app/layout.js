@@ -4,6 +4,9 @@ import { PrayersContextProvider } from "./Context/PrayerContext";
 import { AuthProvider } from "./Context/UserContext";
 import { AlertContextProvider } from "./Context/AlertContext";
 import { ReciterProvider } from "./Context/RecitersContext";
+import { WeatherProvider } from "./Context/WeatherContext";
+import { HadithProvider } from "./Context/HadithContext";
+import { QuranProvider } from "./Context/QuranContext";
 
 
 const AmiriQuran = Amiri_Quran({
@@ -26,9 +29,15 @@ export default function RootLayout({ children }) {
         <AlertContextProvider>
           <AuthProvider>
             <ReciterProvider>
-              <PrayersContextProvider>
-                {children}
-              </PrayersContextProvider>
+              <QuranProvider>
+                <HadithProvider>
+                  <WeatherProvider>
+                    <PrayersContextProvider>
+                      {children}
+                    </PrayersContextProvider>
+                  </WeatherProvider>
+                </HadithProvider>
+              </QuranProvider>
             </ReciterProvider>
           </AuthProvider>
         </AlertContextProvider>

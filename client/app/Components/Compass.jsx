@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState, useMemo, useCallback } from 'react'
 
 const KAABA = { lat: 21.4225, lon: 39.8262 }
 
@@ -18,13 +18,11 @@ function calculateQiblaBearing(lat, lon) {
   return (toDeg(θ) + 360) % 360
 }
 
-// تصحيح زاوية الجهاز حسب اتجاه الشاشة
 function correctedHeading(alpha) {
   const orientation = window.screen.orientation?.angle || 0
   return (alpha + orientation) % 360
 }
 
-// فلتر تنعيم (moving average بسيط)
 function smoothHeading(newVal, oldVal, factor = 0.2) {
   if (oldVal == null) return newVal
   let diff = newVal - oldVal
@@ -42,8 +40,9 @@ export default function QiblaCompass({ size = 220 }) {
 
   const watcherRef = useRef(null)
   const orientationHandlerRef = useRef(null)
+  const frameRef = useRef(null)
 
-  // الموقع (تحديث مستمر)
+  // تحديث الموقع
   useEffect(() => {
     if (!navigator.geolocation) {
       setStatus('error')
@@ -56,8 +55,7 @@ export default function QiblaCompass({ size = 220 }) {
       (pos) => {
         const lat = pos.coords.latitude
         const lon = pos.coords.longitude
-        const bearing = calculateQiblaBearing(lat, lon)
-        setQibla(bearing)
+        setQibla(calculateQiblaBearing(lat, lon))
         setStatus('ready')
       },
       (err) => {
@@ -65,7 +63,7 @@ export default function QiblaCompass({ size = 220 }) {
         if (err.code === 1) setErrorMsg('رفض الوصول للموقع')
         else setErrorMsg(err.message || 'خطأ في الموقع')
       },
-      { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 }
+      { enableHighAccuracy: true, maximumAge: 30000, timeout: 15000 }
     )
 
     return () => {
@@ -74,40 +72,41 @@ export default function QiblaCompass({ size = 220 }) {
     }
   }, [])
 
+  // handler ثابت بالـ useCallback
+  const orientationHandler = useCallback((e) => {
+    let h = null
+    if (typeof e.webkitCompassHeading === 'number') {
+      h = e.webkitCompassHeading
+    } else if (typeof e.alpha === 'number') {
+      h = correctedHeading(e.alpha)
+    }
+    if (h != null) {
+      cancelAnimationFrame(frameRef.current)
+      frameRef.current = requestAnimationFrame(() => {
+        setHeading(prev => smoothHeading(h, prev))
+      })
+    }
+  }, [])
+
   // حساسات الاتجاه
   useEffect(() => {
-    const handler = (e) => {
-      let h = null
-      if (typeof e.webkitCompassHeading === 'number') {
-        h = e.webkitCompassHeading
-      } else if (typeof e.alpha === 'number') {
-        h = correctedHeading(e.alpha)
-      }
-      if (h != null) {
-        setHeading((prev) => smoothHeading(h, prev))
-      }
+    const DeviceOrientationEvent = window.DeviceOrientationEvent
+    if (!DeviceOrientationEvent) return
+
+    if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+      setPermissionNeeded(true)
+      return
     }
 
-    const tryAddListener = () => {
-      const DeviceOrientationEvent = window.DeviceOrientationEvent
-      if (!DeviceOrientationEvent) return
-
-      if (typeof DeviceOrientationEvent.requestPermission === 'function') {
-        setPermissionNeeded(true)
-        return
-      }
-
-      window.addEventListener('deviceorientation', handler, true)
-      orientationHandlerRef.current = handler
-    }
-
-    tryAddListener()
+    window.addEventListener('deviceorientation', orientationHandler, true)
+    orientationHandlerRef.current = orientationHandler
 
     return () => {
       if (orientationHandlerRef.current)
         window.removeEventListener('deviceorientation', orientationHandlerRef.current, true)
+      cancelAnimationFrame(frameRef.current)
     }
-  }, [])
+  }, [orientationHandler])
 
   // طلب إذن iOS
   const requestOrientationPermission = async () => {
@@ -119,19 +118,8 @@ export default function QiblaCompass({ size = 220 }) {
       const res = await DeviceOrientationEvent.requestPermission()
       if (res === 'granted') {
         setPermissionNeeded(false)
-        const handler = (e) => {
-          let h = null
-          if (typeof e.webkitCompassHeading === 'number') {
-            h = e.webkitCompassHeading
-          } else if (typeof e.alpha === 'number') {
-            h = correctedHeading(e.alpha)
-          }
-          if (h != null) {
-            setHeading((prev) => smoothHeading(h, prev))
-          }
-        }
-        window.addEventListener('deviceorientation', handler, true)
-        orientationHandlerRef.current = handler
+        window.addEventListener('deviceorientation', orientationHandler, true)
+        orientationHandlerRef.current = orientationHandler
       } else {
         setErrorMsg('تم رفض إذن الحساسات')
       }
@@ -140,11 +128,12 @@ export default function QiblaCompass({ size = 220 }) {
     }
   }
 
-  const computedRotation = (() => {
+  // rotation محسوبة بالـ useMemo
+  const computedRotation = useMemo(() => {
     if (qibla == null) return 0
     if (heading == null) return qibla
     return ((qibla - heading + 360) % 360)
-  })()
+  }, [qibla, heading])
 
   return (
     <div className="max-w-md w-full h-full">
