@@ -7,9 +7,8 @@ import { SiteHeader } from "@/app/Components/SiteHeader"
 import { SiteFooter } from "@/app/Components/SiteFooter"
 import {
   LogOut, User2, Mail, MapPin, BookOpen, Clock, UserCircle2,
-  Star, Award, Activity, ShieldCircle, Heart
+  Star, Award, Activity, ShieldCheck, Heart
 } from "lucide-react"
-
 export default function ProfilePage() {
   const { user, logout } = useAuth()
 
@@ -50,7 +49,7 @@ export default function ProfilePage() {
                 className="w-40 h-40 md:w-56 md:h-56 relative z-10 rounded-[3rem] border-8 border-white/10 shadow-2xl object-cover"
               />
               <div className="absolute -bottom-4 -left-4 w-12 h-12 bg-gold-accent rounded-2xl flex items-center justify-center text-primary-green shadow-xl z-20">
-                <ShieldCircle size={24} />
+                <ShieldCheck size={24} />
               </div>
             </motion.div>
 
