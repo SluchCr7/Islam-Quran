@@ -1,6 +1,6 @@
 'use client'
 import React, { useState, useEffect } from 'react'
-import { RotateCcw, Plus, Minus } from 'lucide-react'
+import { RotateCcw, Plus, Minus, Flower } from 'lucide-react'
 import { motion } from 'framer-motion'
 
 const MAX_COUNT = 100
@@ -8,133 +8,104 @@ const MAX_COUNT = 100
 const Counter = () => {
   const [num, setNum] = useState(0)
 
-  // تحميل القيمة من localStorage
   useEffect(() => {
     const savedNum = localStorage.getItem('tasbeehCounter')
     if (savedNum) setNum(parseInt(savedNum))
   }, [])
 
-  // حفظ القيمة عند التغيير
   useEffect(() => {
     localStorage.setItem('tasbeehCounter', num)
   }, [num])
 
-  const text = {
-    heading: 'سَبّح بحمد ربك',
-    desc: "سُبْحان الله، الحمد لله، الله أكبر",
-  }
-
-  const percentage = (num / MAX_COUNT) * 33
+  const percentage = (num / MAX_COUNT) * 100
 
   return (
-    <div className="w-full h-full flex items-center justify-center">
-      <div className="relative w-full max-w-xl p-8 text-center overflow-hidden rounded-3xl bg-slate-900/70 backdrop-blur-xl border border-emerald-600 shadow-2xl">
+    <div className="w-full h-full">
+      <div className="relative w-full h-full min-h-[400px] flex flex-col items-center justify-center p-8 rounded-[2.5rem] bg-white border border-emerald-50 shadow-2xl shadow-emerald-900/5 group overflow-hidden">
+        {/* Background Decorations */}
+        <div className="absolute inset-0 bg-[url('/patterns/subtle-pattern.png')] opacity-10 pointer-events-none" />
+        <div className="absolute top-0 left-0 w-32 h-32 bg-emerald-50 rounded-full blur-3xl -ml-16 -mt-16 group-hover:bg-emerald-100 transition-colors duration-700" />
 
-        {/* خلفية النجوم */}
-        <div className="absolute inset-0 pointer-events-none">
-          {[...Array(20)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute bg-yellow-400 rounded-full w-1 h-1 opacity-50"
-              style={{
-                top: `${Math.random() * 100}%`,
-                left: `${Math.random() * 100}%`
-              }}
-              animate={{ y: [0, 3, 0], opacity: [0.5, 1, 0.5] }}
-              transition={{ repeat: Infinity, duration: 2 + Math.random() * 2 }}
-            />
-          ))}
+        {/* Header */}
+        <div className="relative z-10 text-center mb-8">
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <Flower className="text-emerald-500 animate-spin-slow" size={20} />
+            <h3 className="text-2xl font-black text-slate-800 tracking-tight">سَبّح بحمد ربك</h3>
+          </div>
+          <p className="text-xs font-bold text-emerald-600 uppercase tracking-widest bg-emerald-50 px-3 py-1 rounded-full">
+            سُبْحان الله، الحمد لله، الله أكبر
+          </p>
         </div>
 
-        {/* العنوان والوصف */}
-        <h1 className="relative text-2xl md:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-emerald-400 tracking-wide drop-shadow-lg">
-          {text.heading}
-        </h1>
-        <p className="relative mt-2 text-gray-300 text-base md:text-lg leading-relaxed drop-shadow-sm">
-          {text.desc}
-        </p>
-
-        {/* العدّاد الدائري */}
-        <div className="relative mt-6 flex justify-center items-center">
-          <svg className="w-48 h-48">
+        {/* Counter Circle */}
+        <div className="relative flex items-center justify-center mb-8">
+          <svg className="w-56 h-56 transform -rotate-90">
             <circle
-              className="text-gray-700"
-              strokeWidth="8"
+              className="text-emerald-50"
+              strokeWidth="6"
               stroke="currentColor"
               fill="transparent"
-              r="70"
-              cx="96"
-              cy="96"
+              r="90"
+              cx="112"
+              cy="112"
             />
             <motion.circle
-              className="text-yellow-400"
-              strokeWidth="8"
-              stroke="url(#gradient)"
+              className="text-primary-green"
+              strokeWidth="6"
+              stroke="currentColor"
               fill="transparent"
-              r="70"
-              cx="96"
-              cy="96"
-              strokeDasharray={2 * Math.PI * 70}
-              strokeDashoffset={2 * Math.PI * 70 * (1 - num / MAX_COUNT)}
-              initial={{ strokeDashoffset: 2 * Math.PI * 70 }}
-              animate={{ strokeDashoffset: 2 * Math.PI * 70 * (1 - num / MAX_COUNT) }}
-              transition={{ duration: 0.4, type: 'spring', stiffness: 120 }}
+              strokeLinecap="round"
+              r="90"
+              cx="112"
+              cy="112"
+              strokeDasharray={2 * Math.PI * 90}
+              animate={{ strokeDashoffset: 2 * Math.PI * 90 * (1 - num / MAX_COUNT) }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
             />
-            <defs>
-              <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#facc15" />
-                <stop offset="100%" stopColor="#10b981" />
-              </linearGradient>
-            </defs>
           </svg>
 
-          <motion.span
-            key={num}
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.3 }}
-            className="absolute text-4xl md:text-5xl font-extrabold text-yellow-300 drop-shadow-lg"
-          >
-            {num}
-          </motion.span>
+          <div className="absolute flex flex-col items-center">
+            <motion.span
+              key={num}
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              className="text-6xl font-black text-slate-800 font-mono tracking-tighter"
+            >
+              {num}
+            </motion.span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mt-1">
+              تسبيحة
+            </span>
+          </div>
         </div>
 
-        {/* شريط النسبة */}
-        <div className="relative mt-4 w-full h-3 bg-gray-700 rounded-full overflow-hidden">
-          <motion.div
-            initial={{ width: 0 }}
-            animate={{ width: `${percentage}%` }}
-            transition={{ duration: 0.4 }}
-            className="h-full bg-gradient-to-r from-yellow-400 to-emerald-500"
-          ></motion.div>
-        </div>
-        <p className="mt-2 text-sm text-gray-400">{num} / {MAX_COUNT}</p>
-
-        {/* الأزرار */}
-        <div className="flex justify-center gap-6 mt-6 relative z-10">
-          <motion.button
-            whileTap={{ scale: 0.9 }}
+        {/* Controls */}
+        <div className="relative z-10 flex items-center gap-6">
+          <button
             onClick={() => setNum(num > 0 ? num - 1 : 0)}
-            className="flex items-center justify-center w-16 h-16 text-white bg-red-600 rounded-full shadow-lg border-2 border-yellow-400 hover:bg-red-700 transition-transform"
+            className="w-14 h-14 flex items-center justify-center rounded-2xl bg-white border border-emerald-100 text-slate-400 hover:text-red-500 hover:bg-red-50 hover:border-red-100 transition-all shadow-sm"
           >
-            <Minus size={28} />
-          </motion.button>
+            <Minus size={24} />
+          </button>
 
-          <motion.button
-            whileTap={{ scale: 0.9 }}
-            onClick={() => setNum(num + 1 <= MAX_COUNT ? num + 1 : num)}
-            className="flex items-center justify-center w-16 h-16 text-white bg-green-600 rounded-full shadow-lg border-2 border-yellow-400 hover:bg-green-700 transition-transform"
+          <button
+            onClick={() => setNum(num + 1)}
+            className="w-24 h-24 flex items-center justify-center rounded-[2rem] bg-primary-green text-white shadow-xl shadow-emerald-900/20 hover:bg-emerald-800 transition-all transform active:scale-95"
           >
-            <Plus size={28} />
-          </motion.button>
+            <Plus size={40} />
+          </button>
 
-          <motion.button
-            whileTap={{ scale: 0.9 }}
+          <button
             onClick={() => setNum(0)}
-            className="flex items-center justify-center w-16 h-16 text-black bg-yellow-500 rounded-full shadow-lg border-2 border-green-600 hover:bg-yellow-600 transition-transform"
+            className="w-14 h-14 flex items-center justify-center rounded-2xl bg-white border border-emerald-100 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 transition-all shadow-sm"
           >
-            <RotateCcw size={28} />
-          </motion.button>
+            <RotateCcw size={24} />
+          </button>
+        </div>
+
+        {/* Progress Bar Label */}
+        <div className="relative z-10 mt-8 w-full max-w-[120px] flex items-center justify-between text-[10px] font-black text-slate-400 uppercase tracking-widest">
+          <span>الهدف: {MAX_COUNT}</span>
         </div>
       </div>
     </div>
@@ -142,3 +113,4 @@ const Counter = () => {
 }
 
 export default Counter
+

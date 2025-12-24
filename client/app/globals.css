@@ -1,20 +1,150 @@
-
 @import "tailwindcss";
 
-@keyframes sun {0%,100%{transform:rotate(0deg);}50%{transform:rotate(10deg);}}
-.animate-sun {animation:sun 3s infinite alternate;}
+@theme {
+    --color-primary-green: #064e3b;
+    --color-emerald-light: #10b981;
+    --color-gold-accent: #d4af37;
+    --color-cream-bg: #fdfcf0;
+    --color-islamic-navy: #0f172a;
+    --font-arabic: var(--font-ibm-arabic);
+    --font-quran: var(--font-amiri-quran);
+}
 
-@keyframes cloud {0%,100%{transform:translateX(0);}50%{transform:translateX(5px);}}
-.animate-cloud {animation:cloud 4s infinite alternate;}
 
-@keyframes rain {0%{stroke-dashoffset:0;}100%{stroke-dashoffset:6;}}
-.animate-rain line {stroke-dasharray:6; animation:rain 1s infinite linear;}
+:root {
+    --primary: #064e3b;
+    --primary-light: #10b981;
+    --accent: #d4af37;
+    --bg-cream: #fdfcf0;
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --card-bg: rgba(255, 255, 255, 0.7);
+    --glass-bg: rgba(255, 255, 255, 0.4);
+    --glass-border: rgba(255, 255, 255, 0.5);
+}
 
-@keyframes snow {0%{transform:translateY(0);}100%{transform:translateY(6px);}}
-.animate-snow text {animation:snow 1s infinite alternate;}
+body {
+    background-color: var(--bg-cream);
+    color: var(--text-main);
+    background-image: url('/patterns/subtle-pattern.png');
+    background-attachment: fixed;
+    background-size: 400px;
+}
 
-@keyframes thunder {0%,100%{opacity:1;}50%{opacity:0.5;}}
-.animate-thunder text {animation:thunder 0.3s infinite alternate;}
+/* Modern Glassmorphism */
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+}
 
-@keyframes mist {0%,100%{opacity:0.7;}50%{opacity:1;}}
-.animate-mist ellipse {animation:mist 3s infinite alternate;}
+.emerald-gradient {
+    background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
+}
+
+.gold-text {
+    background: linear-gradient(to right, #d4af37, #f59e0b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Custom Animations */
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+.animate-float {
+    animation: float 6s ease-in-out infinite;
+}
+
+@keyframes slow-spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.animate-slow-spin {
+    animation: slow-spin 20s linear infinite;
+}
+
+/* Islamic Geometric Border */
+.islamic-border {
+    position: relative;
+    padding: 2px;
+    background: linear-gradient(45deg, var(--accent), transparent, var(--accent));
+    border-radius: 1rem;
+}
+
+.islamic-border>div {
+    background: white;
+    border-radius: calc(1rem - 2px);
+}
+
+/* Typography Enhancements */
+.arabic-text {
+    font-family: var(--font-amiri-quran), serif;
+    line-height: 1.8;
+}
+
+@keyframes sun {
+
+    0%,
+    100% {
+        transform: rotate(0deg);
+    }
+
+    50% {
+        transform: rotate(10deg);
+    }
+}
+
+.animate-sun {
+    animation: sun 3s infinite alternate;
+}
+
+@keyframes cloud {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    50% {
+        transform: translateX(5px);
+    }
+}
+
+.animate-cloud {
+    animation: cloud 4s infinite alternate;
+}
+
+@keyframes rain {
+    0% {
+        stroke-dashoffset: 0;
+    }
+
+    100% {
+        stroke-dashoffset: 6;
+    }
+}
+
+.animate-rain line {
+    stroke-dasharray: 6;
+    animation: rain 1s infinite linear;
+}

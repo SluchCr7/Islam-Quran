@@ -2,11 +2,11 @@
 
 export default function SurahSelector({ surahId, setSurahId, surahs }) {
   return (
-    <div className="flex flex-col gap-3 items-center mb-6">
+    <div className="flex flex-col gap-3 items-center">
       <select
         value={surahId}
         onChange={(e) => setSurahId(Number(e.target.value))}
-        className="p-3 w-full max-w-xs rounded-xl bg-gray-800 text-white border border-gray-700 focus:ring-2 focus:ring-green-500 transition"
+        className="w-full bg-transparent text-slate-800 font-bold text-lg text-center appearance-none focus:outline-none cursor-pointer"
       >
         {surahs.map((surah) => (
           <option key={surah.id} value={surah.id}>
@@ -17,3 +17,4 @@ export default function SurahSelector({ surahId, setSurahId, surahs }) {
     </div>
   )
 }
+

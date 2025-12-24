@@ -1,28 +1,44 @@
 'use client'
 import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 
 export default function QuranViewer() {
   const [ayahs, setAyahs] = useState([]);
 
   useEffect(() => {
-    // مثال: سورة الفاتحة (السورة 1)
     fetch("https://api.alquran.cloud/v1/surah/1/quran-uthmani")
       .then(res => res.json())
       .then(data => setAyahs(data.data.ayahs));
   }, []);
 
   return (
-    <div dir="rtl" className="min-h-screen bg-[url('/quran-bg.png')] bg-cover bg-fixed flex flex-col items-center p-6">
-      <h1 className="text-3xl font-bold text-green-700 mb-6">سورة الفاتحة</h1>
-      
-      <div className="quran-text bg-white/80 rounded-2xl shadow-xl p-8 max-w-3xl leading-loose text-2xl text-gray-900 text-center">
-        {ayahs.map((ayah) => (
-          <span key={ayah.number} className="px-1">
-            {ayah.text}
-            <span className="text-green-700">﴿{ayah.numberInSurah}﴾ </span>
-          </span>
-        ))}
-      </div>
+    <div dir="rtl" className="min-h-screen bg-cream-bg flex flex-col items-center py-12 px-6">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="max-w-4xl w-full bg-white rounded-[3rem] shadow-2xl shadow-emerald-900/5 border border-emerald-50 overflow-hidden"
+      >
+        <div className="p-12 text-center space-y-8">
+          <div className="inline-flex items-center gap-4 px-6 py-2 rounded-full bg-emerald-50 text-primary-green text-sm font-black tracking-widest uppercase">
+            سورة الفاتحة
+          </div>
+
+          <div className="font-quran text-4xl leading-[2.5] text-slate-800 text-justify">
+            <span className="block text-center text-5xl mb-12 text-primary-green">بِسْمِ اللَّهِ الرَّحْمَـٰنِ الرَّحِيمِ</span>
+            {ayahs.map((ayah) => (
+              <span key={ayah.number} className="hover:text-primary-green transition-colors duration-300">
+                {ayah.text.replace('بِسْمِ اللَّهِ الرَّحْمَـٰنِ الرَّحِيمِ', '')}
+                <span className="inline-flex items-center justify-center w-10 h-10 mx-2 text-gold-accent border-2 border-gold-accent/20 rounded-full text-lg font-bold">
+                  {ayah.numberInSurah}
+                </span>
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div className="h-4 bg-gradient-to-r from-transparent via-gold-accent/20 to-transparent" />
+      </motion.div>
     </div>
   );
 }
+

@@ -15,7 +15,6 @@ export default function QuranPlayer() {
 
   const audioRef = useRef(null)
 
-  // 🟢 تحميل السورة الجديدة
   useEffect(() => {
     const audio = audioRef.current
     if (!audio) return
@@ -28,7 +27,6 @@ export default function QuranPlayer() {
     setDuration(0)
   }, [surahId])
 
-  // 🟢 متابعة التقدم
   useEffect(() => {
     const audio = audioRef.current
     if (!audio) return
@@ -43,7 +41,6 @@ export default function QuranPlayer() {
     }
   }, [])
 
-  // 🟢 تشغيل/إيقاف
   const togglePlay = () => {
     const audio = audioRef.current
     if (!audio) return
@@ -66,15 +63,17 @@ export default function QuranPlayer() {
   }
 
   return (
-    <div className="h-full flex items-center justify-center bg-gradient-to-br from-gray-900 via-black to-gray-800 p-6">
+    <div className="h-full flex items-center justify-center bg-white rounded-[2.5rem] border border-emerald-50 overflow-hidden relative">
+      <div className="absolute inset-0 bg-[url('/patterns/subtle-pattern.png')] opacity-20 pointer-events-none" />
+
       <audio ref={audioRef} className="hidden" />
 
-      <div className="w-full max-w-lg rounded-3xl overflow-hidden ">
+      <div className="w-full relative z-10 p-8 space-y-6">
         <PlayerHeader />
 
-        <SurahSelector surahId={surahId} setSurahId={setSurahId} surahs={menshQuran} />
-
-        {/* <SurahInfo surahs={menshQuran} surahId={surahId} /> */}
+        <div className="bg-emerald-50/50 rounded-2xl p-4 border border-emerald-100/50 shadow-inner">
+          <SurahSelector surahId={surahId} setSurahId={setSurahId} surahs={menshQuran} />
+        </div>
 
         <PlayerControls
           isPlaying={isPlaying}
@@ -85,14 +84,17 @@ export default function QuranPlayer() {
           surahs={menshQuran}
         />
 
-        <ProgressBar
-          progress={progress}
-          duration={duration}
-          setProgress={setProgress}
-          audioRef={audioRef}
-          formatTime={formatTime}
-        />
+        <div className="bg-white/50 backdrop-blur-sm rounded-2xl p-4 border border-emerald-50 shadow-sm">
+          <ProgressBar
+            progress={progress}
+            duration={duration}
+            setProgress={setProgress}
+            audioRef={audioRef}
+            formatTime={formatTime}
+          />
+        </div>
       </div>
     </div>
   )
 }
+

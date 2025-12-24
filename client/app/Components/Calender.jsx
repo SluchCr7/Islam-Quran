@@ -1,92 +1,68 @@
 'use client'
 import React, { useState, useMemo, useCallback } from "react";
 import { motion } from "framer-motion";
-import { Calendar, ChevronLeft, ChevronRight, Star } from "lucide-react";
+import { Calendar, ChevronLeft, ChevronRight, Star, Sparkles } from "lucide-react";
 
-// 📌 الشهور الهجرية
 const hijriMonths = [
   "محرم", "صفر", "ربيع الأول", "ربيع الآخر", "جمادى الأولى",
   "جمادى الآخرة", "رجب", "شعبان", "رمضان", "شوال", "ذو القعدة", "ذو الحجة"
 ];
 
-// 📌 المناسبات الإسلامية (موسعة)
 const islamicEvents = {
-  // محرم
-  "1-1": { name: "رأس السنة الهجرية", icon: <Star className="w-4 h-4 text-pink-400" /> },
-  "10-1": { name: "عاشوراء", icon: <Star className="w-4 h-4 text-yellow-400" /> },
-
-  // رجب
-  "27-7": { name: "الإسراء والمعراج", icon: <Star className="w-4 h-4 text-indigo-400" /> },
-
-  // ربيع الأول
-  "12-3": { name: "المولد النبوي الشريف", icon: <Star className="w-4 h-4 text-orange-400" /> },
-
-  // شعبان
-  "15-8": { name: "ليلة النصف من شعبان", icon: <Star className="w-4 h-4 text-purple-400" /> },
-
-  // رمضان
-  "1-9": { name: "بداية رمضان", icon: <Star className="w-4 h-4 text-emerald-400" /> },
-  "17-9": { name: "غزوة بدر الكبرى", icon: <Star className="w-4 h-4 text-red-400" /> },
-  "20-9": { name: "فتح مكة", icon: <Star className="w-4 h-4 text-teal-400" /> },
-  "27-9": { name: "ليلة القدر (محتملة)", icon: <Star className="w-4 h-4 text-blue-400" /> },
-
-  // شوال
-  "1-10": { name: "عيد الفطر", icon: <Star className="w-4 h-4 text-green-500" /> },
-
-  // ذو الحجة
-  "8-12": { name: "يوم التروية", icon: <Star className="w-4 h-4 text-cyan-400" /> },
-  "9-12": { name: "يوم عرفة", icon: <Star className="w-4 h-4 text-orange-400" /> },
-  "10-12": { name: "عيد الأضحى", icon: <Star className="w-4 h-4 text-green-400" /> },
+  "1-1": { name: "رأس السنة الهجرية", icon: <Star size={14} className="text-amber-400" /> },
+  "10-1": { name: "عاشوراء", icon: <Star size={14} className="text-amber-400" /> },
+  "27-7": { name: "الإسراء والمعراج", icon: <Star size={14} className="text-amber-400" /> },
+  "12-3": { name: "المولد النبوي الشريف", icon: <Star size={14} className="text-amber-400" /> },
+  "15-8": { name: "ليلة النصف من شعبان", icon: <Star size={14} className="text-amber-400" /> },
+  "1-9": { name: "بداية رمضان", icon: <Sparkles size={14} className="text-emerald-500" /> },
+  "17-9": { name: "غزوة بدر الكبرى", icon: <Star size={14} className="text-red-400" /> },
+  "20-9": { name: "فتح مكة", icon: <Star size={14} className="text-teal-400" /> },
+  "27-9": { name: "ليلة القدر (محتملة)", icon: <Sparkles size={14} className="text-gold-accent" /> },
+  "1-10": { name: "عيد الفطر", icon: <Sparkles size={14} className="text-emerald-500" /> },
+  "8-12": { name: "يوم التروية", icon: <Star size={14} className="text-cyan-400" /> },
+  "9-12": { name: "يوم عرفة", icon: <Star size={14} className="text-amber-400" /> },
+  "10-12": { name: "عيد الأضحى", icon: <Sparkles size={14} className="text-emerald-500" /> },
 };
 
-// 📌 الثوابت
 const daysInMonth = 30;
 const days = [...Array(daysInMonth).keys()].map(i => i + 1);
 
-// ==========================
-// 📌 DayCell Component
-// ==========================
-const DayCell = React.memo(function DayCell({ day, event, onHover }) {
+const DayCell = React.memo(function DayCell({ day, event }) {
   return (
     <motion.div
-      whileHover={{ scale: 1.08 }}
-      onMouseEnter={() => onHover(event)}
-      onMouseLeave={() => onHover(null)}
-      className={`relative flex items-center justify-center h-16 rounded-xl cursor-pointer border transition
+      whileHover={{ y: -5 }}
+      className={`relative flex items-center justify-center aspect-square rounded-2xl cursor-pointer border transition-all duration-300
         ${event
-          ? "bg-gradient-to-br from-emerald-700 to-emerald-600 shadow-lg border-emerald-400 text-white font-bold"
-          : "bg-slate-800 border-slate-700 text-gray-300 hover:bg-slate-700"}`}
+          ? "bg-primary-green text-white border-primary-green shadow-lg shadow-emerald-900/10 font-black"
+          : "bg-white border-emerald-50 text-slate-800 hover:bg-emerald-50"}`}
     >
-      <span>{day}</span>
+      <span className="text-sm">{day}</span>
       {event && <span className="absolute top-1 right-1">{event.icon}</span>}
     </motion.div>
   );
 });
 
-// ==========================
-// 📌 EventCard Component
-// ==========================
 const EventCard = React.memo(function EventCard({ event, day, monthName }) {
   return (
     <motion.div
-      whileHover={{ scale: 1.03 }}
-      className="flex items-center gap-3 p-4 bg-slate-900 rounded-xl border border-slate-700 hover:border-emerald-400 transition shadow-md"
+      whileHover={{ x: -10 }}
+      className="flex items-center gap-4 p-4 bg-white rounded-2xl border border-emerald-50 shadow-sm hover:shadow-md transition-all group"
     >
-      {event.icon}
-      <span>{event.name} - {day} {monthName}</span>
+      <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center group-hover:bg-primary-green group-hover:text-white transition-colors">
+        {event.icon}
+      </div>
+      <div>
+        <p className="text-slate-800 font-bold text-sm">{event.name}</p>
+        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{day} {monthName}</p>
+      </div>
     </motion.div>
   );
 });
 
-// ==========================
-// 📌 Main Calendar Component
-// ==========================
 export default function HijriCalendar() {
-  const [month, setMonth] = useState(3); // رمضان
-  const [year, setYear] = useState(1447);
-  const [hoveredEvent, setHoveredEvent] = useState(null);
+  const [month, setMonth] = useState(8);
+  const [year, setYear] = useState(1446);
 
-  // 📌 تغيير الشهر
   const changeMonth = useCallback((dir) => {
     setMonth((prev) => {
       let newMonth = prev + dir;
@@ -98,7 +74,6 @@ export default function HijriCalendar() {
     });
   }, [year]);
 
-  // 📌 أحداث الشهر الحالي
   const monthEvents = useMemo(() => {
     return Object.entries(islamicEvents).filter(([key]) => {
       const [, m] = key.split("-");
@@ -107,27 +82,32 @@ export default function HijriCalendar() {
   }, [month]);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      {/* 📅 التقويم */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="bg-slate-900 p-6 rounded-2xl border border-slate-700 shadow-xl"
-      >
-        {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <button onClick={() => changeMonth(-1)} className="p-2 rounded-lg bg-slate-800 hover:bg-slate-700">
-            <ChevronLeft className="w-5 h-5" />
-          </button>
-          <h2 className="text-xl font-bold">{hijriMonths[month]} {year} هـ</h2>
-          <button onClick={() => changeMonth(1)} className="p-2 rounded-lg bg-slate-800 hover:bg-slate-700">
-            <ChevronRight className="w-5 h-5" />
-          </button>
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+      <div className="lg:col-span-8 space-y-8">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-primary-green flex items-center justify-center text-white shadow-lg shadow-emerald-900/10">
+              <Calendar size={24} />
+            </div>
+            <div>
+              <h2 className="text-2xl font-black text-slate-800">{hijriMonths[month]} {year} هـ</h2>
+              <p className="text-xs text-emerald-600 font-bold uppercase tracking-widest">التقويم الهجري</p>
+            </div>
+          </div>
+          <div className="flex gap-2">
+            <button onClick={() => changeMonth(-1)} className="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-emerald-50 text-emerald-600 hover:bg-emerald-50 shadow-sm transition-all">
+              <ChevronRight size={20} />
+            </button>
+            <button onClick={() => changeMonth(1)} className="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-emerald-50 text-emerald-600 hover:bg-emerald-50 shadow-sm transition-all">
+              <ChevronLeft size={20} />
+            </button>
+          </div>
         </div>
 
-        {/* Days Grid */}
-        <div className="grid grid-cols-7 gap-2">
+        <div className="grid grid-cols-7 gap-3 sm:gap-4 md:gap-6">
+          {["ح", "ن", "ث", "ر", "خ", "ج", "س"].map(d => (
+            <div key={d} className="text-center text-[10px] font-black text-slate-400 uppercase tracking-widest pb-2">{d}</div>
+          ))}
           {days.map((day) => {
             const event = islamicEvents[`${day}-${month + 1}`];
             return (
@@ -135,34 +115,31 @@ export default function HijriCalendar() {
                 key={day}
                 day={day}
                 event={event}
-                onHover={setHoveredEvent}
               />
             );
           })}
         </div>
-      </motion.div>
+      </div>
 
-      {/* 🕌 قائمة الأحداث */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.2 }}
-        className="bg-slate-900 p-6 rounded-2xl border border-slate-700 shadow-xl"
-      >
-        <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-          <Calendar className="w-5 h-5 text-emerald-400" /> الأحداث الهامة
-        </h2>
-        <div className="space-y-3">
+      <div className="lg:col-span-4 space-y-6">
+        <div className="flex items-center gap-2 mb-2">
+          <Sparkles className="text-gold-accent" size={20} />
+          <h3 className="text-xl font-black text-slate-800">مناسبات الشهر</h3>
+        </div>
+        <div className="space-y-4">
           {monthEvents.length > 0 ? (
             monthEvents.map(([key, event]) => {
               const [d] = key.split("-");
               return <EventCard key={key} event={event} day={d} monthName={hijriMonths[month]} />;
             })
           ) : (
-            <p className="text-gray-400">لا توجد أحداث هامة هذا الشهر.</p>
+            <div className="p-8 rounded-[2rem] bg-emerald-50/50 border border-dashed border-emerald-200 text-center">
+              <p className="text-slate-400 text-sm font-medium">لا توجد أحداث هامة هذا الشهر.</p>
+            </div>
           )}
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }
+

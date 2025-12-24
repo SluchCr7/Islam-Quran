@@ -1,250 +1,11 @@
-// "use client"
-// import React, { useEffect, useState } from "react"
-// import dynamic from "next/dynamic"
-// import { motion } from "framer-motion"
-// import { ArrowLeft, ArrowRight, BookOpen, Sun, Moon } from "lucide-react"
-// import { CiMenuBurger } from "react-icons/ci"
-// import SideMenu from "@/app/Components/MenuQuran"
-
-// function Mushaf() {
-//   const totalPages = 604
-//   const [page, setPage] = useState(1)
-//   const [ayahs, setAyahs] = useState([])
-//   const [surahs, setSurahs] = useState([])
-//   const [menuOpen, setMenuOpen] = useState(false)
-//   const [jumpPage, setJumpPage] = useState("")
-//   const [theme, setTheme] = useState("dark")
-//   const [bookmark, setBookmark] = useState(null)
-
-//   const edition = "quran-uthmani"
-
-//   // ✅ تحميل البيانات من localStorage بأمان
-//   useEffect(() => {
-//     if (typeof window !== "undefined") {
-//       const saved = JSON.parse(localStorage.getItem("bookmark"))
-//       if (saved) setBookmark(saved)
-
-//       const last = localStorage.getItem("lastPage")
-//       if (last) setPage(Number(last))
-
-//       const savedTheme = localStorage.getItem("theme") || "dark"
-//       setTheme(savedTheme)
-//       document.documentElement.classList.toggle("dark", savedTheme === "dark")
-//     }
-//   }, [])
-
-//   useEffect(() => {
-//     fetch(`https://api.alquran.cloud/v1/page/${page}/${edition}`)
-//       .then(res => res.json())
-//       .then(data => setAyahs(data.data.ayahs))
-//       .catch(err => console.error(err))
-
-//     if (typeof window !== "undefined") {
-//       localStorage.setItem("lastPage", page)
-//     }
-//   }, [page])
-
-//   useEffect(() => {
-//     fetch(`https://api.alquran.cloud/v1/surah`)
-//       .then(res => res.json())
-//       .then(data => setSurahs(data.data))
-//       .catch(err => console.error(err))
-//   }, [])
-
-//   const handleBookmark = (ayah) => {
-//     const newBookmark = {
-//       surah: ayah.surah.name,
-//       surahNumber: ayah.surah.number,
-//       ayah: ayah.numberInSurah,
-//     }
-//     setBookmark(newBookmark)
-//     if (typeof window !== "undefined") {
-//       localStorage.setItem("bookmark", JSON.stringify(newBookmark))
-//     }
-//   }
-
-//   const toggleTheme = () => {
-//     const newTheme = theme === "dark" ? "light" : "dark"
-//     setTheme(newTheme)
-//     if (typeof window !== "undefined") {
-//       localStorage.setItem("theme", newTheme)
-//     }
-//     document.documentElement.classList.toggle("dark", newTheme === "dark")
-//   }
-
-//   const prev = () => { if (page > 1) setPage(page - 1) }
-//   const next = () => { if (page < totalPages) setPage(page + 1) }
-
-//   return (
-//     <div dir="rtl"
-//       className={`min-h-screen flex flex-col font-arabic transition-colors duration-500
-//       ${theme === "dark"
-//         ? "bg-gradient-to-br from-gray-950 via-gray-900 to-black text-gray-200"
-//         : "bg-gradient-to-br from-gray-100 via-white to-gray-200 text-gray-900"}`}>
-
-//       {/* الهيدر */}
-//       <div className={`flex justify-between items-center p-4 shadow-lg border-b transition-colors duration-500
-//         ${theme === "dark"
-//           ? "bg-gradient-to-r from-gray-900 to-gray-800 text-teal-400 border-gray-700"
-//           : "bg-gradient-to-r from-emerald-100 to-teal-50 text-emerald-700 border-emerald-300"}`}>
-
-//         <div className="flex flex-row items-center gap-3">
-//           <button onClick={() => setMenuOpen(true)} className="hover:scale-110 transition">
-//             <CiMenuBurger className="w-7 h-7" />
-//           </button>
-//           <h1 className="flex items-center gap-2 text-2xl font-extrabold tracking-wide">
-//             <BookOpen className="w-6 h-6" />
-//             المصحف الشريف
-//           </h1>
-//         </div>
-
-//         <div className="flex items-center gap-4">
-//           <span className="text-sm px-3 py-1 rounded-full shadow border">
-//             صفحة {page} / {totalPages}
-//           </span>
-
-//           {/* زر التبديل */}
-//           <button
-//             onClick={toggleTheme}
-//             className="p-2 rounded-full border hover:scale-110 transition"
-//           >
-//             {theme === "dark"
-//               ? <Sun className="w-6 h-6 text-yellow-400" />
-//               : <Moon className="w-6 h-6 text-indigo-600" />}
-//           </button>
-//         </div>
-//       </div>
-
-//       {/* القائمة */}
-//       <SideMenu toggleTheme={toggleTheme} menuOpen={menuOpen} setMenuOpen={setMenuOpen} setPage={setPage} edition={edition} theme={theme} />
-
-//       {/* محتوى */}
-//       <div className="flex-1 flex flex-col items-center py-6 px-4">
-//         {ayahs.length > 0 && (
-//           <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
-//             <div className={`flex flex-col md:flex-row items-center justify-center gap-4 px-8 py-3 rounded-full shadow-lg transition-colors duration-500
-//               ${theme === "dark" ? "bg-gray-900/60 border border-teal-500/50" : "bg-emerald-50 border border-emerald-300"}`}>
-              
-//               {/* اسم السورة */}
-//               <h2 className="text-2xl font-bold tracking-wider">
-//                 {ayahs[0]?.surah?.name}
-//               </h2>
-
-//               {/* رقم الجزء + الحزب */}
-//               <div className="flex gap-6 text-sm">
-//                 <span>
-//                   الجزء:{" "}
-//                   <span className="font-bold">
-//                     {Math.ceil(page / (604 / 30))}
-//                   </span>
-//                 </span>
-//                 <span>
-//                   الحزب:{" "}
-//                   <span className="font-bold">
-//                     {Math.ceil(page / (604 / 60))}
-//                   </span>
-//                 </span>
-//               </div>
-//             </div>
-//           </motion.div>
-//         )}
-
-//         {/* عرض الآيات */}
-//         <motion.div
-//           key={page}
-//           initial={{ opacity: 0, y: 30 }}
-//           animate={{ opacity: 1, y: 0 }}
-//           transition={{ duration: 0.6 }}
-//           className={`w-full max-w-3xl rounded-3xl shadow-2xl border p-8 leading-loose text-center text-3xl tracking-wide transition-colors duration-500
-//             ${theme === "dark"
-//               ? "bg-gray-900/80 backdrop-blur-xl border-gray-700/60 text-gray-100"
-//               : "bg-white border-gray-300 text-gray-900"}`}
-//         >
-//          {ayahs.map((a) => {
-//             const isBookmarked =
-//                 bookmark &&
-//                 bookmark.surahNumber === a.surah.number &&
-//                 bookmark.ayah === a.numberInSurah;
-
-//             return (
-//                 <React.Fragment key={a.number}>
-//                 {a.text}{" "}
-//                 <span
-//                     onClick={() => handleBookmark(a)}
-//                     className={`mx-1 inline-flex items-center justify-center w-8 h-8 rounded-full text-sm font-bold shadow-md cursor-pointer transition
-//                     ${
-//                         isBookmarked
-//                         ? "bg-gradient-to-br from-green-500 to-green-400 text-black ring-2 ring-green-300 scale-110"
-//                         : "bg-gradient-to-br from-amber-400 to-yellow-500 text-gray-900 hover:scale-105"
-//                     }`}
-//                 >
-//                     {a.numberInSurah}
-//                 </span>{" "}
-//                 </React.Fragment>
-//             );
-//         })}
-
-//         </motion.div>
-//       </div>
-
-//       {/* فوتر */}
-//       <div className={`p-4 border-t shadow-inner transition-colors duration-500
-//         ${theme === "dark"
-//           ? "bg-gradient-to-r from-gray-900/95 to-gray-800/90 border-gray-700"
-//           : "bg-gradient-to-r from-emerald-50 to-emerald-100 border-emerald-300"}`}>
-        
-//         <div className="flex flex-col md:flex-row justify-between items-center gap-4 max-w-5xl mx-auto">
-//           {/* السابق / التالي */}
-//           <div className="flex gap-3">
-//             <button onClick={prev} disabled={page === 1}
-//               className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gray-700 hover:bg-gray-600 transition disabled:opacity-40 dark:bg-gray-700 dark:hover:bg-gray-600 bg-emerald-200 hover:bg-emerald-300">
-//               <ArrowRight className="w-5 h-5" /> السابق
-//             </button>
-//             <button onClick={next} disabled={page === totalPages}
-//               className="flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-white bg-gradient-to-r from-emerald-600 to-teal-500 hover:opacity-90 transition disabled:opacity-40">
-//               التالي <ArrowLeft className="w-5 h-5" />
-//             </button>
-//           </div>
-
-//           {/* الانتقال إلى صفحة */}
-//           <div className="flex items-center gap-2">
-//             <input type="number" min="1" max={totalPages} value={jumpPage}
-//               onChange={(e) => setJumpPage(e.target.value)}
-//               placeholder="رقم الصفحة"
-//               className="w-32 px-3 py-2 rounded-lg border text-center focus:outline-none focus:ring-2 focus:ring-teal-500" />
-//             <button
-//               onClick={() => {
-//                 if (jumpPage >= 1 && jumpPage <= totalPages) setPage(Number(jumpPage))
-//               }}
-//               className="px-4 py-2 rounded-xl bg-teal-500 text-gray-900 font-bold hover:bg-teal-400 transition">
-//               اذهب
-//             </button>
-//           </div>
-//         </div>
-
-//         {/* شريط تقدم */}
-//         <div className="w-full mt-4 h-2 bg-gray-300 dark:bg-gray-700 rounded-full overflow-hidden">
-//           <div
-//             className="h-full bg-gradient-to-r from-teal-500 to-emerald-400 transition-all duration-500"
-//             style={{ width: `${(page / totalPages) * 100}%` }}
-//           ></div>
-//         </div>
-//       </div>
-//     </div>
-//   )
-// }
-
-// export default dynamic(() => Promise.resolve(Mushaf), { ssr: false })
-
-
 "use client"
 import React, { useState } from "react"
 import dynamic from "next/dynamic"
-import { motion } from "framer-motion"
-import { ArrowLeft, ArrowRight, BookOpen, Sun, Moon } from "lucide-react"
-import { CiMenuBurger } from "react-icons/ci"
+import { motion, AnimatePresence } from "framer-motion"
+import { ArrowLeft, ArrowRight, BookOpen, Sun, Moon, Menu, Search, Bookmark, Navigation } from "lucide-react"
 import SideMenu from "@/app/Components/MenuQuran"
 import { useQuran } from "@/app/Context/QuranContext"
+import { SiteHeader } from "@/app/Components/SiteHeader"
 
 function Mushaf() {
   const {
@@ -256,121 +17,158 @@ function Mushaf() {
   const [jumpPage, setJumpPage] = useState("")
 
   return (
-    <div dir="rtl"
-      className={`min-h-screen flex flex-col font-arabic transition-colors duration-500
-      ${theme === "dark"
-        ? "bg-gradient-to-br from-gray-950 via-gray-900 to-black text-gray-200"
-        : "bg-gradient-to-br from-gray-100 via-white to-gray-200 text-gray-900"}`}>
+    <div dir="rtl" className="min-h-screen bg-[#FDFCF0] flex flex-col pt-20">
+      <SiteHeader />
 
-      {/* الهيدر */}
-      <div className={`flex justify-between items-center p-4 shadow-lg border-b transition-colors duration-500
-        ${theme === "dark"
-          ? "bg-gradient-to-r from-gray-900 to-gray-800 text-teal-400 border-gray-700"
-          : "bg-gradient-to-r from-emerald-100 to-teal-50 text-emerald-700 border-emerald-300"}`}>
+      {/* Index Menu */}
+      <SideMenu
+        toggleTheme={toggleTheme}
+        menuOpen={menuOpen}
+        setMenuOpen={setMenuOpen}
+        setPage={setPage}
+        edition={edition}
+        theme={theme}
+      />
 
-        <div className="flex flex-row items-center gap-3">
-          <button onClick={() => setMenuOpen(true)} className="hover:scale-110 transition">
-            <CiMenuBurger className="w-7 h-7" />
-          </button>
-          <h1 className="flex items-center gap-2 text-2xl font-extrabold tracking-wide">
-            <BookOpen className="w-6 h-6" />
-            المصحف الشريف
-          </h1>
-        </div>
+      <main className="flex-1 flex flex-col items-center py-12 px-4 max-w-7xl mx-auto w-full">
+        {/* Page Header Info */}
+        <AnimatePresence mode="wait">
+          {ayahs.length > 0 && (
+            <motion.div
+              key={`header-${ayahs[0]?.surah?.number}`}
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="w-full max-w-4xl mb-12"
+            >
+              <div className="flex flex-col md:flex-row items-center justify-between gap-8 p-8 rounded-[3rem] bg-white border border-emerald-50 shadow-2xl shadow-emerald-900/5 relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-50 rounded-full blur-3xl -mr-16 -mt-16 opacity-50" />
 
-        <div className="flex items-center gap-4">
-          <span className="text-sm px-3 py-1 rounded-full shadow border">
-            صفحة {page} / {totalPages}
-          </span>
-          <button onClick={toggleTheme} className="p-2 rounded-full border hover:scale-110 transition">
-            {theme === "dark"
-              ? <Sun className="w-6 h-6 text-yellow-400" />
-              : <Moon className="w-6 h-6 text-indigo-600" />}
-          </button>
-        </div>
-      </div>
+                <div className="flex items-center gap-6 relative z-10">
+                  <button
+                    onClick={() => setMenuOpen(true)}
+                    className="w-14 h-14 rounded-2xl bg-primary-green flex items-center justify-center text-white shadow-lg hover:scale-105 transition-transform"
+                  >
+                    <Menu size={24} />
+                  </button>
+                  <div>
+                    <h2 className="text-3xl font-black text-slate-800 tracking-tight">{ayahs[0]?.surah?.name}</h2>
+                    <div className="flex gap-4 mt-1">
+                      <span className="text-xs font-black text-emerald-600 uppercase tracking-widest bg-emerald-50 px-3 py-1 rounded-full">الجزء {Math.ceil(page / (604 / 30))}</span>
+                      <span className="text-xs font-black text-gold-accent uppercase tracking-widest bg-white border border-gold-accent/20 px-3 py-1 rounded-full">الحزب {Math.ceil(page / (604 / 60))}</span>
+                    </div>
+                  </div>
+                </div>
 
-      {/* القائمة */}
-      <SideMenu toggleTheme={toggleTheme} menuOpen={menuOpen} setMenuOpen={setMenuOpen} setPage={setPage} edition={edition} theme={theme} />
-
-      {/* محتوى */}
-      <div className="flex-1 flex flex-col items-center py-6 px-4">
-        {ayahs.length > 0 && (
-          <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
-            <div className={`flex flex-col md:flex-row items-center justify-center gap-4 px-8 py-3 rounded-full shadow-lg transition-colors duration-500
-              ${theme === "dark" ? "bg-gray-900/60 border border-teal-500/50" : "bg-emerald-50 border border-emerald-300"}`}>
-              <h2 className="text-2xl font-bold tracking-wider">
-                {ayahs[0]?.surah?.name}
-              </h2>
-              <div className="flex gap-6 text-sm">
-                <span>الجزء: <span className="font-bold">{Math.ceil(page / (604 / 30))}</span></span>
-                <span>الحزب: <span className="font-bold">{Math.ceil(page / (604 / 60))}</span></span>
+                <div className="flex items-center gap-4 relative z-10">
+                  <div className="flex flex-col items-end">
+                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">الصفحة الحالية</span>
+                    <span className="text-xl font-black text-slate-800 tracking-tighter">{page} <span className="text-slate-300">/ {totalPages}</span></span>
+                  </div>
+                  <div className="w-px h-10 bg-slate-100 mx-2" />
+                  <button onClick={toggleTheme} className="w-12 h-12 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 hover:text-primary-green transition-colors">
+                    {theme === "dark" ? <Sun size={20} /> : <Moon size={20} />}
+                  </button>
+                </div>
               </div>
-            </div>
-          </motion.div>
-        )}
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-        {/* عرض الآيات */}
+        {/* Mushaf Page */}
         <motion.div
           key={page}
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className={`w-full max-w-3xl rounded-3xl shadow-2xl border p-8 leading-loose text-center text-3xl tracking-wide transition-colors duration-500
-            ${theme === "dark"
-              ? "bg-gray-900/80 backdrop-blur-xl border-gray-700/60 text-gray-100"
-              : "bg-white border-gray-300 text-gray-900"}`}
+          initial={{ opacity: 0, scale: 0.98 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+          className="w-full max-w-4xl bg-white rounded-[4rem] shadow-2xl shadow-emerald-900/10 border border-emerald-50 p-12 md:p-20 relative min-h-[800px] flex flex-col"
         >
-          {ayahs.map((a) => {
-            const isBookmarked = bookmark &&
-              bookmark.surahNumber === a.surah.number &&
-              bookmark.ayah === a.numberInSurah
+          {/* Decorative frame elements */}
+          <div className="absolute inset-8 border border-emerald-100/50 rounded-[3rem] pointer-events-none" />
+          <div className="absolute top-12 left-1/2 -translate-x-1/2 w-48 h-1 bg-gradient-to-r from-transparent via-gold-accent/20 to-transparent" />
 
-            return (
-              <React.Fragment key={a.number}>
-                {a.text}{" "}
-                <span
-                  onClick={() => handleBookmark(a)}
-                  className={`mx-1 inline-flex items-center justify-center w-8 h-8 rounded-full text-sm font-bold shadow-md cursor-pointer transition
-                    ${isBookmarked
-                      ? "bg-gradient-to-br from-green-500 to-green-400 text-black ring-2 ring-green-300 scale-110"
-                      : "bg-gradient-to-br from-amber-400 to-yellow-500 text-gray-900 hover:scale-105"}`}
-                >
-                  {a.numberInSurah}
-                </span>{" "}
-              </React.Fragment>
-            )
-          })}
+          <div className="flex-1 quran-page-content font-quran text-4xl leading-[2.8] text-slate-800 text-justify">
+            {ayahs.map((a) => {
+              const isBookmarked = bookmark &&
+                bookmark.surahNumber === a.surah.number &&
+                bookmark.ayah === a.numberInSurah
+
+              return (
+                <React.Fragment key={a.number}>
+                  <span className="hover:text-primary-green transition-colors duration-300 cursor-default">
+                    {a.text}{" "}
+                    <motion.span
+                      whileHover={{ scale: 1.2 }}
+                      whileTap={{ scale: 0.9 }}
+                      onClick={() => handleBookmark(a)}
+                      className={`inline-flex items-center justify-center w-10 h-10 rounded-full text-base font-bold shadow-sm cursor-pointer transition-all duration-300 mx-1 border-2
+                        ${isBookmarked
+                          ? "bg-primary-green text-white border-primary-green ring-4 ring-emerald-100"
+                          : "bg-white text-gold-accent border-gold-accent/20 hover:border-gold-accent"}`}
+                    >
+                      {a.numberInSurah}
+                    </motion.span>{" "}
+                  </span>
+                </React.Fragment>
+              )
+            })}
+          </div>
+
+          <div className="mt-12 pt-8 border-t border-slate-50 flex justify-center">
+            <p className="text-[10px] font-black text-slate-300 uppercase tracking-[0.5em]">صدق الله العظيم</p>
+          </div>
         </motion.div>
-      </div>
+      </main>
 
-      {/* فوتر */}
-      <div className={`p-4 border-t shadow-inner transition-colors duration-500
-        ${theme === "dark"
-          ? "bg-gradient-to-r from-gray-900/95 to-gray-800/90 border-gray-700"
-          : "bg-gradient-to-r from-emerald-50 to-emerald-100 border-emerald-300"}`}>
-        
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4 max-w-5xl mx-auto">
-          <div className="flex gap-3">
-            <button onClick={prev} disabled={page === 1} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gray-700 hover:bg-gray-600 transition disabled:opacity-40 dark:bg-gray-700 dark:hover:bg-gray-600 bg-emerald-200 hover:bg-emerald-300">
-              <ArrowRight className="w-5 h-5" /> السابق
+      {/* Persistent Navigation Controls */}
+      <div className="fixed bottom-8 inset-x-0 z-40 pointer-events-none">
+        <div className="max-w-xl mx-auto px-4 pointer-events-auto">
+          <div className="bg-white/90 backdrop-blur-xl rounded-[2.5rem] border border-emerald-50 shadow-2xl p-4 flex items-center justify-between gap-4">
+            <button
+              onClick={prev}
+              disabled={page === 1}
+              className="h-14 w-14 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400 hover:text-primary-green hover:bg-emerald-50 transition-all disabled:opacity-20"
+            >
+              <ArrowRight size={24} />
             </button>
-            <button onClick={next} disabled={page === totalPages} className="flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-white bg-gradient-to-r from-emerald-600 to-teal-500 hover:opacity-90 transition disabled:opacity-40">
-              التالي <ArrowLeft className="w-5 h-5" />
+
+            <div className="flex-1 flex items-center gap-2 px-4">
+              <div className="relative flex-1 group">
+                <Navigation className="absolute right-4 top-1/2 -translate-y-1/2 text-emerald-600 transition-transform group-focus-within:scale-110" size={16} />
+                <input
+                  type="number"
+                  min="1"
+                  max={totalPages}
+                  value={jumpPage}
+                  onChange={(e) => setJumpPage(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && jumpPage >= 1 && jumpPage <= totalPages) {
+                      setPage(Number(jumpPage));
+                      setJumpPage("");
+                    }
+                  }}
+                  placeholder="انتقل لصفحة..."
+                  className="w-full h-12 pr-12 pl-4 rounded-xl bg-emerald-50/50 border border-emerald-100 text-sm font-black text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-green focus:bg-white transition-all shadow-inner text-center"
+                />
+              </div>
+            </div>
+
+            <button
+              onClick={next}
+              disabled={page === totalPages}
+              className="h-14 w-14 rounded-2xl bg-primary-green flex items-center justify-center text-white shadow-lg hover:bg-emerald-800 hover:-translate-x-1 transition-all disabled:opacity-20 shadow-emerald-900/20"
+            >
+              <ArrowLeft size={24} />
             </button>
           </div>
 
-          <div className="flex items-center gap-2">
-            <input type="number" min="1" max={totalPages} value={jumpPage} onChange={(e) => setJumpPage(e.target.value)} placeholder="رقم الصفحة"
-              className="w-32 px-3 py-2 rounded-lg border text-center focus:outline-none focus:ring-2 focus:ring-teal-500" />
-            <button onClick={() => { if (jumpPage >= 1 && jumpPage <= totalPages) setPage(Number(jumpPage)) }} className="px-4 py-2 rounded-xl bg-teal-500 text-gray-900 font-bold hover:bg-teal-400 transition">
-              اذهب
-            </button>
+          {/* Progress Bar */}
+          <div className="mt-4 h-1.5 w-full bg-slate-200/30 rounded-full overflow-hidden backdrop-blur-md">
+            <motion.div
+              initial={{ width: 0 }}
+              animate={{ width: `${(page / totalPages) * 100}%` }}
+              className="h-full bg-gradient-to-l from-primary-green to-emerald-300"
+            />
           </div>
-        </div>
-
-        <div className="w-full mt-4 h-2 bg-gray-300 dark:bg-gray-700 rounded-full overflow-hidden">
-          <div className="h-full bg-gradient-to-r from-teal-500 to-emerald-400 transition-all duration-500" style={{ width: `${(page / totalPages) * 100}%` }}></div>
         </div>
       </div>
     </div>
@@ -378,3 +176,4 @@ function Mushaf() {
 }
 
 export default dynamic(() => Promise.resolve(Mushaf), { ssr: false })
+

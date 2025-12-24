@@ -1,34 +1,32 @@
 import { Play, Pause, StepBack, StepForward } from "lucide-react"
 
 export default function PlayerControls({ isPlaying, togglePlay, nextSurah, prevSurah, surahId, surahs }) {
-  
+
   return (
-    <div className="flex items-center justify-center gap-8 mt-4">
-      {/* زر السابق */}
+    <div className="flex items-center justify-center gap-8 py-2">
       <button
         onClick={prevSurah}
         disabled={surahId === 1}
-        className="p-3 bg-gray-800/80 rounded-full hover:bg-gray-700 transition disabled:opacity-40 text-white"
+        className="w-12 h-12 flex items-center justify-center bg-white border border-emerald-100 rounded-full text-emerald-600 hover:bg-emerald-50 transition-all disabled:opacity-30 shadow-sm"
       >
-        <StepBack size={24} />
+        <StepBack size={20} />
       </button>
 
-      {/* زر التشغيل/الإيقاف */}
       <button
         onClick={togglePlay}
-        className="p-6 bg-green-600 rounded-full hover:bg-green-700 shadow-xl transition transform active:scale-95 text-white"
+        className="w-20 h-20 flex items-center justify-center bg-primary-green rounded-full hover:bg-emerald-800 shadow-xl shadow-emerald-900/20 transition-all transform active:scale-95 text-white"
       >
-        {isPlaying ? <Pause size={32} /> : <Play size={32} />}
+        {isPlaying ? <Pause size={32} fill="currentColor" /> : <Play size={32} fill="currentColor" className="ml-1" />}
       </button>
 
-      {/* زر التالي */}
       <button
         onClick={nextSurah}
         disabled={surahId === surahs.length}
-        className="p-3 bg-gray-800/80 rounded-full hover:bg-gray-700 transition disabled:opacity-40 text-white"
+        className="w-12 h-12 flex items-center justify-center bg-white border border-emerald-100 rounded-full text-emerald-600 hover:bg-emerald-50 transition-all disabled:opacity-30 shadow-sm"
       >
-        <StepForward size={24} />
+        <StepForward size={20} />
       </button>
     </div>
   )
 }
+

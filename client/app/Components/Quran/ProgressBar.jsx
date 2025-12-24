@@ -10,11 +10,8 @@ export default function ProgressBar({ progress, duration, setProgress, audioRef,
     }
   }
 
-
-
   return (
-    <div className="w-full mt-6">
-      {/* شريط التقدم */}
+    <div className="w-full">
       <input
         type="range"
         min="0"
@@ -22,28 +19,33 @@ export default function ProgressBar({ progress, duration, setProgress, audioRef,
         value={progress}
         step="0.1"
         onChange={handleSeek}
-        className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-green-500
+        className="w-full h-1.5 bg-emerald-100 rounded-lg appearance-none cursor-pointer accent-emerald-600 mb-3
           [&::-webkit-slider-thumb]:appearance-none
           [&::-webkit-slider-thumb]:h-4
           [&::-webkit-slider-thumb]:w-4
           [&::-webkit-slider-thumb]:rounded-full
-          [&::-webkit-slider-thumb]:bg-green-500
+          [&::-webkit-slider-thumb]:bg-gold-accent
+          [&::-webkit-slider-thumb]:border-2
+          [&::-webkit-slider-thumb]:border-white
+          [&::-webkit-slider-thumb]:shadow-md
           [&::-webkit-slider-thumb]:cursor-pointer
           [&::-moz-range-thumb]:h-4
           [&::-moz-range-thumb]:w-4
           [&::-moz-range-thumb]:rounded-full
-          [&::-moz-range-thumb]:bg-green-500
+          [&::-moz-range-thumb]:bg-gold-accent
+          [&::-moz-range-thumb]:border-2
+          [&::-moz-range-thumb]:border-white
           [&::-moz-range-thumb]:cursor-pointer"
         style={{
-          background: `linear-gradient(to left, #22c55e ${(progress / (duration || 1)) * 100}%, #374151 ${(progress / (duration || 1)) * 100}%)`,
+          background: `linear-gradient(to left, var(--primary) ${(progress / (duration || 1)) * 100}%, #f1f5f9 ${(progress / (duration || 1)) * 100}%)`,
         }}
       />
 
-      {/* الوقت */}
-      <div className="flex justify-between text-sm text-gray-300 mt-2">
+      <div className="flex justify-between text-[10px] font-bold text-slate-400 uppercase tracking-widest">
         <span>{formatTime(progress)}</span>
         <span>{formatTime(duration)}</span>
       </div>
     </div>
   )
 }
+
